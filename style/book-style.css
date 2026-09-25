@@ -1,0 +1,188 @@
+/* =============================================================
+   《长安一日》 — 页面层
+   全书配色取自当天两位主角身上真实穿着的汉服：
+     ZQ 靛蓝汉服  采样 #3b4477
+     CQ 藕紫汉服  采样 #8f7c9c
+   纸色为中性冷白，刻意避开相册惯用的米黄。
+   ============================================================= */
+
+@font-face{font-family:"Source Serif 4";src:url("fonts/SourceSerif4-Regular.otf.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"Source Serif 4";src:url("fonts/SourceSerif4-It.otf.woff2") format("woff2");font-weight:400;font-style:italic;font-display:swap}
+
+:root{
+  --zq:#3b4477;
+  --zq-deep:#20254a;
+  --zq-lift:#9aa3da;
+  --cq:#8f7c9c;
+  --cq-lift:#cebade;
+  --cq-wash:#e4dcec;
+  --paper:#f2f2ef;
+  --ink:#1e2130;
+  --ink-soft:#686d80;
+  --book-serif:"Source Serif 4","Noto Serif SC","Songti SC",Georgia,serif;
+  --book-sans:"Helvetica Neue",Arial,"Microsoft YaHei","PingFang SC",sans-serif;
+}
+
+/* ---- 页面底色 ---------------------------------------------------- */
+.art-page{
+  container-type:inline-size;
+  position:relative;
+  aspect-ratio:var(--page-ratio,.75);
+  overflow:hidden;
+  background:var(--paper) url("paper-grain.svg") repeat;
+  color:var(--ink);
+  font-family:var(--book-serif);
+  font-weight:400;
+}
+
+/* ---- 图版 -------------------------------------------------------- */
+.art-page .plate{
+  position:absolute;left:50%;top:47%;
+  transform:translate(-50%,-50%);
+  width:84%;height:66%;margin:0;
+  display:flex;align-items:center;justify-content:center;
+}
+/* max-width/max-height 让 img 元素框等于照片实际渲染尺寸，
+   阴影才会贴着照片边缘而不是空框。 */
+.art-page .plate img{
+  display:block;width:auto;height:auto;
+  max-width:100%;max-height:100%;
+  border:0;border-radius:0;
+  box-shadow:0 1px 2px rgb(20 24 48 / 9%),0 8px 22px -9px rgb(20 24 48 / 26%);
+}
+.art-page .plate.small{width:56%}
+.art-page .plate.medium{width:84%}
+.art-page .plate.large{width:92%}
+.art-page .plate.portrait{width:82%;height:80%}
+.art-page .plate.high{top:40%}
+.art-page .plate.low{top:55%}
+.art-page .plate.aside{left:56%}
+
+/* 跨页满幅：同一张照片在左右两页各取一半，越过书脊重新拼合。
+   页宽:页高 = 3:4，左右合计 3:2，恰是这批 6000x4000 原片的比例，
+   因此零裁切；16:9 的片子由 cover 居中裁去左右各 7.8%。 */
+.art-page .plate.spread{
+  left:0;top:0;width:100%;height:100%;transform:none;
+  display:block;
+}
+.art-page .plate.spread img{
+  position:absolute;top:0;
+  width:200%;height:100%;
+  max-width:none;max-height:none;
+  object-fit:cover;box-shadow:none;
+}
+.art-page .plate.spread-left img{left:0}
+.art-page .plate.spread-right img{right:0}
+
+/* 跨页图注压在照片上；照片底部偶有亮部（木阶、栏杆），
+   用一道由暗到透明的窄渐层兜住对比度，
+   左右两页各出一半，横跨书脊仍然连续。 */
+.art-page:has(.plate.spread)::after{
+  position:absolute;inset:auto 0 0 0;z-index:2;
+  height:22%;content:"";pointer-events:none;
+  background:linear-gradient(to top,
+    rgb(8 10 22 / 62%), rgb(8 10 22 / 24%) 46%, rgb(8 10 22 / 0%));
+}
+
+/* ---- 图注 -------------------------------------------------------- */
+.art-page .folio{
+  position:absolute;bottom:5.2%;left:8.5%;right:8.5%;margin:0;z-index:4;
+  display:flex;justify-content:space-between;align-items:baseline;gap:1.4em;
+  color:var(--ink-soft);
+  font:400 2.05cqw/1.4 var(--book-sans);
+  letter-spacing:.1em;
+}
+.art-page .folio i{font-style:normal;font-variant-numeric:tabular-nums}
+.art-page .folio.start{justify-content:flex-start}
+.art-page .folio.end{justify-content:flex-end}
+.art-page .folio.over{color:#f4f2f6;text-shadow:0 1px 4px rgb(6 8 20 / 72%),0 0 14px rgb(6 8 20 / 46%)}
+
+/* ---- 布面：封面与章节页 ------------------------------------------ */
+.art-page.cloth,
+.art-page.chapter{
+  color:#ece9dd;
+  background-color:var(--zq);
+  background-image:url("cloth-weave.svg");
+  background-repeat:repeat;
+}
+.art-page.chapter{background-color:var(--zq-deep)}
+
+/* ---- 环衬 -------------------------------------------------------- */
+.art-page.endpaper{background-color:var(--cq-wash);background-image:url("paper-grain.svg")}
+
+/* ---- 封面 -------------------------------------------------------- */
+.art-page .cover-title{
+  position:absolute;left:13%;right:11%;top:14.5%;margin:0;
+  font:400 10.6cqw/1.14 var(--book-serif);
+  letter-spacing:.04em;
+  text-shadow:0 1px 0 rgb(9 12 28 / 26%);
+}
+.art-page .cover-sub{
+  position:absolute;left:14%;top:31.5%;margin:0;
+  font:400 2.4cqw/1.7 var(--book-sans);letter-spacing:.28em;color:#b9bede;
+}
+.art-page .cover-meta{
+  position:absolute;left:14%;bottom:13.5%;margin:0;
+  font:400 2.3cqw/1.85 var(--book-sans);letter-spacing:.16em;color:#b9bede;
+}
+.art-page .cover-plate{
+  position:absolute;right:12.5%;bottom:13.5%;width:33%;margin:0;
+  box-shadow:0 2px 12px rgb(6 9 24 / 44%),0 0 0 1px rgb(236 233 221 / 15%);
+}
+.art-page .cover-plate img{display:block;width:100%;height:auto;border:0;border-radius:0}
+
+/* ---- 章节开篇 ---------------------------------------------------- */
+.art-page .chapter-no{
+  position:absolute;left:14%;top:20.5%;margin:0;
+  font:400 5.6cqw/1 var(--book-serif);color:var(--cq-lift);letter-spacing:.14em;
+}
+.art-page .chapter-name{
+  position:absolute;left:12.5%;top:30.5%;margin:0;
+  font:400 21cqw/1 var(--book-serif);letter-spacing:.02em;
+}
+.art-page .chapter-meta{
+  position:absolute;left:14.5%;bottom:22.5%;margin:0;
+  font:400 2.25cqw/1.9 var(--book-sans);letter-spacing:.15em;color:#b3b8dc;
+}
+.art-page .chapter-rule{
+  position:absolute;left:14.5%;bottom:16.5%;width:32%;height:3px;display:flex;
+  background:rgb(236 233 221 / 12%);
+}
+.art-page .chapter-rule b{display:block;height:100%}
+.art-page .chapter-rule b.zq{background:var(--zq-lift)}
+.art-page .chapter-rule b.cq{background:var(--cq-lift)}
+
+/* ---- 扉页 -------------------------------------------------------- */
+.art-page .titleblock{position:absolute;left:14%;right:14%;top:28%}
+.art-page .titleblock h2{
+  margin:0 0 4.5cqw;font:400 8.8cqw/1.22 var(--book-serif);
+  letter-spacing:.03em;color:var(--zq);
+}
+.art-page .titleblock .sub{
+  margin:0 0 11cqw;font:400 2.5cqw/1.7 var(--book-sans);
+  letter-spacing:.24em;color:var(--ink-soft);
+}
+.art-page .titleblock .meta{
+  margin:0;font:400 2.4cqw/2 var(--book-sans);
+  letter-spacing:.13em;color:var(--ink-soft);
+}
+
+/* ---- 封底 -------------------------------------------------------- */
+.art-page .back-mark{
+  position:absolute;left:0;right:0;bottom:15%;margin:0;
+  text-align:center;text-indent:.5em;
+  font:400 3cqw/1 var(--book-sans);letter-spacing:.5em;color:#b0b5d8;
+}
+.art-page .back-rule{
+  position:absolute;left:50%;bottom:22%;width:16%;height:2px;translate:-50% 0;
+  background:rgb(236 233 221 / 22%);
+}
+
+/* ---- 版权页 ------------------------------------------------------ */
+.art-page .colophon{
+  position:absolute;left:14%;right:16%;bottom:13.5%;margin:0;
+  font:400 2.15cqw/2.05 var(--book-sans);letter-spacing:.07em;color:var(--ink-soft);
+}
+.art-page .colophon p{margin:0 0 2.6cqw}
+.art-page .colophon p:last-child{margin-bottom:0}
+.art-page .colophon .small-print{font-size:1.9cqw;color:#8a8d9c}
