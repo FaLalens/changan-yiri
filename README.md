@@ -42,11 +42,23 @@
 index.html              整本书的页面结构
 styles.css              外壳：表头、舞台、翻页控件
 style/book-style.css    页面本体：纸张、图版、图注、布面
-flipbook.js             翻页逻辑与键盘、按钮绑定
+flipbook.js             翻页逻辑、键盘按钮绑定、照片按需加载
 html-contract.test.mjs  结构契约测试
 vendor/                 PageFlip 翻页内核（MIT）
-assets/photos/          三十二张照片，长边 2400px
+assets/photos/*.webp    三十二张照片，长边 1800px
+assets/photos/*@m.webp  同样的照片，长边 1200px，给窄屏
+assets/photos/blur/     极小的模糊底图，每张不到 1KB
 ```
+
+## 照片是怎么加载的
+
+一本书有三十二张照片，如果一次全下完，手机上要等好几分钟。所以这里分了三层：
+
+打开时先加载每张不到 1KB 的模糊底图，整本首屏只有几 KB，立刻就能翻。真正的照片按需补上：只加载当前页和它前后各两页，翻到哪补到哪。窄屏取 1200px 版本，宽屏取 1800px 版本。
+
+于是首次打开要下的字节，从十几 MB 降到手机约 465KB、桌面约 666KB。
+
+跨页的左右两半是同一张照片的两个 `img`，浏览器只会下载一次。
 
 ## 检查
 

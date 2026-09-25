@@ -40,6 +40,45 @@ const pageFlip = new St.PageFlip(bookElement, {
 let currentPage = 0;
 let isTurning = false;
 
+/* ---- 照片按需加载 -------------------------------------------------
+   页面里先放 5KB 的模糊占位图，整本首屏不到 10KB 就能翻。
+   真图只加载"当前页 + 前后各 2 页"，翻到哪补到哪。
+   窄屏取 1200px 版本，宽屏取 1800px 版本。
+   跨页的左右两半是同一张照片的两个 img，浏览器只会下载一次；
+   但两处都得各自换 src，所以这里按元素记，不按照片编号记。 */
+const smallScreen =
+  typeof window.matchMedia === "function"
+    ? window.matchMedia("(max-width: 700px)")
+    : { matches: false, addEventListener() {} };
+const done = new WeakMap();                      // img 元素 -> 已应用的 URL
+
+function photoUrl(stem) {
+  return `assets/photos/${stem}${smallScreen.matches ? "@m" : ""}.webp`;
+}
+
+function upgrade(scope) {
+  if (typeof scope?.querySelectorAll !== "function") return;
+  scope.querySelectorAll("img[data-photo]").forEach((img) => {
+    const stem = img.dataset?.photo;
+    if (!stem) return;
+    const url = photoUrl(stem);
+    if (done.get(img) === url) return;            // 这一处已是当前规格
+    done.set(img, url);
+    const next = new Image();
+    next.decoding = "async";
+    next.onload = () => { img.src = url; };       // 解码完再换，避免闪白
+    next.src = url;
+  });
+}
+
+// 跨页横跨两个连续页索引，所以窗口要连成一片，
+// 不能只取 page-2 / page / page+2，那会正好跳过跨页的右半。
+function upgradeAround(page) {
+  const from = Math.max(0, page - 2);
+  const to = Math.min(pages.length - 1, page + 3);
+  for (let i = from; i <= to; i += 1) upgrade(pages[i]);
+}
+
 function updateControls() {
   const pageCount = pageFlip.getPageCount();
   const lastPage = pageCount - 1;
@@ -60,11 +99,17 @@ function updateControls() {
 pageFlip.on("flip", (event) => {
   currentPage = Number(event.data);
   updateControls();
+  upgradeAround(currentPage);
 });
 
 pageFlip.on("changeState", (event) => {
   isTurning = event.data !== "read";
   updateControls();
+});
+
+// 横竖屏切换会改变图片规格，换完要把已看过的页重新升一遍
+smallScreen.addEventListener("change", () => {
+  upgradeAround(currentPage);
 });
 
 function updateOrientation(orientation) {
@@ -81,7 +126,12 @@ updateControls();
 const requestedPage = Number(new URLSearchParams(location.search).get("page"));
 if (Number.isInteger(requestedPage) && requestedPage >= 0 && requestedPage < pages.length) {
   pageFlip.turnToPage(requestedPage);
+  currentPage = requestedPage;
+  updateControls();
 }
+
+// 首屏：封面和开头两页立刻升级，其余等翻到再说
+upgradeAround(currentPage);
 
 previousButton.addEventListener("click", () => {
   if (!isTurning) pageFlip.flipPrev("bottom");
