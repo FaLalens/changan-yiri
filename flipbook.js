@@ -6,7 +6,6 @@ const pageStatus = document.querySelector("#page-status");
 const orientationStatus = document.querySelector("#orientation");
 const pageWidth = Number(bookElement.dataset.pageWidth) || 512;
 const pageHeight = Number(bookElement.dataset.pageHeight) || 640;
-document.documentElement.style.setProperty("--page-ratio", pageWidth / pageHeight);
 
 // 叶片上限是唯一真源：这里定义一次，写进 CSS 变量供版式使用，
 // 同时交给 PageFlip 当作 maxWidth。两处同源就不会互相夹住。
@@ -14,6 +13,7 @@ const leafMax = 1200;
 document.documentElement.style.setProperty("--page-ratio", pageWidth / pageHeight);
 document.documentElement.style.setProperty("--leaf-max", `${leafMax}px`);
 
+const prefersReducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches === true;
 const pageFlip = new St.PageFlip(bookElement, {
   width: pageWidth,
   height: pageHeight,
@@ -22,8 +22,8 @@ const pageFlip = new St.PageFlip(bookElement, {
   maxWidth: leafMax,
   minHeight: Math.max(1, Math.round(pageHeight * 0.56)),
   maxHeight: Math.round((leafMax * pageHeight) / pageWidth),
-  drawShadow: true,
-  flippingTime: 760,
+  drawShadow: false,
+  flippingTime: prefersReducedMotion ? 1 : 760,
   usePortrait: true,
   startZIndex: 10,
   autoSize: true,
@@ -33,12 +33,13 @@ const pageFlip = new St.PageFlip(bookElement, {
   clickEventForward: true,
   useMouseEvents: true,
   swipeDistance: 24,
-  showPageCorners: true,
+  showPageCorners: false,
   disableFlipByClick: false,
 });
 
 let currentPage = 0;
 let isTurning = false;
+let openingCover = false;
 
 /* ---- 照片按需加载 -------------------------------------------------
    页面里先放 5KB 的模糊占位图，整本首屏不到 10KB 就能翻。
@@ -66,7 +67,18 @@ function upgrade(scope) {
     done.set(img, url);
     const next = new Image();
     next.decoding = "async";
-    next.onload = () => { img.src = url; };       // 解码完再换，避免闪白
+    next.onload = () => {
+      if (done.get(img) === url) {
+        img.src = url;
+        img.closest(".book-page")?.classList.remove("photo-error");
+      }
+    };
+    next.onerror = () => {
+      if (done.get(img) === url) {
+        done.delete(img);
+        img.closest(".book-page")?.classList.add("photo-error");
+      }
+    };
     next.src = url;
   });
 }
@@ -82,7 +94,7 @@ function upgradeAround(page) {
 function updateControls() {
   const pageCount = pageFlip.getPageCount();
   const lastPage = pageCount - 1;
-  bookElement.dataset.edge = currentPage === 0 ? "front" : currentPage === lastPage ? "back" : "inside";
+  bookElement.dataset.edge = openingCover ? "inside" : currentPage === 0 ? "front" : currentPage === lastPage ? "back" : "inside";
 
   previousButton.disabled = currentPage === 0 || isTurning;
   nextButton.disabled = currentPage === lastPage || isTurning;
@@ -104,6 +116,7 @@ pageFlip.on("flip", (event) => {
 
 pageFlip.on("changeState", (event) => {
   isTurning = event.data !== "read";
+  openingCover = event.data === "flipping" && currentPage === 0;
   updateControls();
 });
 

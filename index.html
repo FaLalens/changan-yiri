@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+<a class="skip-link" href="#book">跳到相册</a>
 <main class="room">
   <header class="book-header">
     <span>2026.08.29</span>
@@ -15,9 +16,9 @@
     <span id="orientation">对开</span>
   </header>
 
-  <section class="stage" aria-label="可翻页的写真集">
+  <section class="stage" aria-label="可翻页的写真集" aria-describedby="book-help">
     <div class="book-rig">
-      <div id="book" class="book" data-page-width="480" data-page-height="640">
+      <div id="book" class="book" data-page-width="480" data-page-height="640" tabindex="-1">
 
         <!-- 1 封面 -->
         <article class="book-page art-page cloth recto" data-density="hard" aria-label="封面">
@@ -110,7 +111,7 @@
         </article>
 
         <!-- 15 章首 食 -->
-        <article class="book-page art-page chapter recto" aria-label="第二章 食">
+        <article class="book-page art-page chapter lotus recto" aria-label="第二章 食">
           <p class="chapter-no">贰</p>
           <h2 class="chapter-name">食</h2>
           <p class="chapter-meta">16:31 至 16:33<br>德福巷</p>
@@ -216,7 +217,7 @@
         </article>
 
         <!-- 33 章首 夜 -->
-        <article class="book-page art-page chapter recto" aria-label="第四章 夜">
+        <article class="book-page art-page chapter lotus recto" aria-label="第四章 夜">
           <p class="chapter-no">肆</p>
           <h2 class="chapter-name">夜</h2>
           <p class="chapter-meta">20:18 至 22:07<br>钟楼</p>
@@ -300,9 +301,16 @@
   </section>
 
   <footer class="controls" aria-label="翻页控制">
-    <button id="previous" type="button" aria-label="上一页">←</button>
-    <div class="status" aria-live="polite"><span id="page-status">封面</span><small>拖动或使用方向键</small></div>
-    <button id="next" type="button" aria-label="下一页">→</button>
+    <button id="previous" type="button" aria-label="上一页">
+      <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="m12.5 4.5-5 5 5 5" /></svg>
+    </button>
+    <div class="status" aria-live="polite">
+      <span id="page-status">封面</span>
+      <small id="book-help">拖动页面，或使用方向键翻页</small>
+    </div>
+    <button id="next" type="button" aria-label="下一页">
+      <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="m7.5 4.5 5 5-5 5" /></svg>
+    </button>
   </footer>
 </main>
 <script src="vendor/page-flip.browser.js"></script>

@@ -1,8 +1,8 @@
 /* =============================================================
    《长安一日》 — 页面层
    全书配色取自当天两位主角身上真实穿着的汉服：
-     ZQ 靛蓝汉服  采样 #3b4477
-     CQ 藕紫汉服  采样 #8f7c9c
+     ZQ 靛蓝汉服  原色 #3b4477，布面调整为 #354174
+     CQ 藕紫汉服  原色 #8f7c9c，深色章节用 #62536d
    纸色为中性冷白，刻意避开相册惯用的米黄。
    ============================================================= */
 
@@ -10,12 +10,15 @@
 @font-face{font-family:"Source Serif 4";src:url("fonts/SourceSerif4-It.otf.woff2") format("woff2");font-weight:400;font-style:italic;font-display:swap}
 
 :root{
-  --zq:#3b4477;
-  --zq-deep:#20254a;
-  --zq-lift:#9aa3da;
+  --zq:#354174;
+  --zq-deep:#263055;
+  --zq-lift:#a7bad2;
   --cq:#8f7c9c;
-  --cq-lift:#cebade;
-  --cq-wash:#e4dcec;
+  --cq-deep:#62536d;
+  --cq-lift:#dfc4e4;
+  --cq-wash:#e7e0eb;
+  --thread:#d4bd8c;
+  --ornament:#7fb4bf;
   --paper:#f2f2ef;
   --ink:#1e2130;
   --ink-soft:#686d80;
@@ -34,6 +37,13 @@
   font-family:var(--book-serif);
   font-weight:400;
 }
+.art-page.paper{
+  background-image:url("paper-edge.svg"),url("paper-grain.svg");
+  background-size:4% 96px,auto;
+  background-repeat:repeat-y,repeat;
+}
+.art-page.paper.verso{background-position:left top,left top}
+.art-page.paper.recto{background-position:right top,left top}
 
 /* ---- 图版 -------------------------------------------------------- */
 .art-page .plate{
@@ -83,6 +93,13 @@
   background:linear-gradient(to top,
     rgb(8 10 22 / 62%), rgb(8 10 22 / 24%) 46%, rgb(8 10 22 / 0%));
 }
+.art-page:has(.plate.spread-right)::after{
+  background-image:url("embroidered-medallion.svg"),linear-gradient(to top,
+    rgb(8 10 22 / 62%),rgb(8 10 22 / 24%) 46%,rgb(8 10 22 / 0%));
+  background-position:right 7% bottom 10%,center;
+  background-size:14% auto,100% 100%;
+  background-repeat:no-repeat;
+}
 
 /* ---- 图注 -------------------------------------------------------- */
 .art-page .folio{
@@ -100,15 +117,46 @@
 /* ---- 布面：封面与章节页 ------------------------------------------ */
 .art-page.cloth,
 .art-page.chapter{
-  color:#ece9dd;
+  color:#f1eee8;
   background-color:var(--zq);
   background-image:url("cloth-weave.svg");
   background-repeat:repeat;
 }
 .art-page.chapter{background-color:var(--zq-deep)}
+.art-page.chapter.lotus{background-color:var(--cq-deep)}
 
 /* ---- 环衬 -------------------------------------------------------- */
 .art-page.endpaper{background-color:var(--cq-wash);background-image:url("paper-grain.svg")}
+
+/* 装帧的菱格与花纹取意于两套汉服的绣饰。 */
+.art-page.cloth,.art-page.chapter,.art-page.endpaper{isolation:isolate}
+.art-page.cloth::after,.art-page.chapter::after,.art-page.endpaper::after{
+  position:absolute;z-index:0;content:"";pointer-events:none;
+}
+.art-page.cloth::after,.art-page.chapter::after{
+  inset:4.8%;
+  border:1px solid rgb(222 202 153 / 56%);
+  box-shadow:inset 0 0 0 5px rgb(20 28 59 / 12%),inset 0 0 0 6px rgb(222 202 153 / 27%);
+  background:url("embroidered-medallion.svg") 92% 6%/28% auto no-repeat;
+}
+.art-page.chapter::after{background-position:92% 18%;background-size:38% auto}
+.art-page.endpaper::after{
+  inset:7%;opacity:.55;
+  border:1px solid rgb(143 122 156 / 48%);
+  background:url("embroidered-medallion.svg") center/50% auto no-repeat;
+}
+.art-page.cloth>*,.art-page.chapter>*{z-index:1}
+.art-page.cloth{
+  background-image:url("binding-stitch.svg"),linear-gradient(90deg,rgb(31 37 70 / 76%) 0 6%,rgb(126 108 148 / 48%) 6% 7%,transparent 7%),url("cloth-weave.svg");
+  background-position:left top,left top,left top;
+  background-size:7% 72px,auto,auto;
+  background-repeat:repeat-y,no-repeat,repeat;
+}
+.art-page.cloth.verso{
+  background-image:url("binding-stitch.svg"),linear-gradient(270deg,rgb(31 37 70 / 76%) 0 6%,rgb(126 108 148 / 48%) 6% 7%,transparent 7%),url("cloth-weave.svg");
+  background-position:right top,left top,left top;
+}
+.art-page.chapter.lotus::after{border-color:rgb(230 207 191 / 58%);box-shadow:inset 0 0 0 5px rgb(60 42 75 / 14%),inset 0 0 0 6px rgb(230 207 191 / 27%)}
 
 /* ---- 封面 -------------------------------------------------------- */
 .art-page .cover-title{
@@ -119,15 +167,16 @@
 }
 .art-page .cover-sub{
   position:absolute;left:14%;top:31.5%;margin:0;
-  font:400 2.4cqw/1.7 var(--book-sans);letter-spacing:.28em;color:#b9bede;
+  font:400 2.4cqw/1.7 var(--book-sans);letter-spacing:.28em;color:var(--thread);
 }
 .art-page .cover-meta{
   position:absolute;left:14%;bottom:13.5%;margin:0;
-  font:400 2.3cqw/1.85 var(--book-sans);letter-spacing:.16em;color:#b9bede;
+  font:400 2.3cqw/1.85 var(--book-sans);letter-spacing:.16em;color:#e4dace;
 }
 .art-page .cover-plate{
-  position:absolute;right:12.5%;bottom:13.5%;width:33%;margin:0;
-  box-shadow:0 2px 12px rgb(6 9 24 / 44%),0 0 0 1px rgb(236 233 221 / 15%);
+  position:absolute;right:12.5%;bottom:13.5%;width:35%;margin:0;
+  padding:3px;background:var(--thread);
+  box-shadow:0 6px 15px rgb(6 9 24 / 36%);
 }
 .art-page .cover-plate img{display:block;width:100%;height:auto;border:0;border-radius:0}
 
@@ -142,11 +191,11 @@
 }
 .art-page .chapter-meta{
   position:absolute;left:14.5%;bottom:22.5%;margin:0;
-  font:400 2.25cqw/1.9 var(--book-sans);letter-spacing:.15em;color:#b3b8dc;
+  font:400 2.25cqw/1.9 var(--book-sans);letter-spacing:.15em;color:#e1d9e3;
 }
 .art-page .chapter-rule{
   position:absolute;left:14.5%;bottom:16.5%;width:32%;height:3px;display:flex;
-  background:rgb(236 233 221 / 12%);
+  background:rgb(236 233 221 / 18%);
 }
 .art-page .chapter-rule b{display:block;height:100%}
 .art-page .chapter-rule b.zq{background:var(--zq-lift)}
@@ -154,6 +203,7 @@
 
 /* ---- 扉页 -------------------------------------------------------- */
 .art-page .titleblock{position:absolute;left:14%;right:14%;top:28%}
+.art-page .titleblock::before{position:absolute;top:-7cqw;left:0;width:20%;height:1px;background:var(--thread);content:""}
 .art-page .titleblock h2{
   margin:0 0 4.5cqw;font:400 8.8cqw/1.22 var(--book-serif);
   letter-spacing:.03em;color:var(--zq);
@@ -175,7 +225,12 @@
 }
 .art-page .back-rule{
   position:absolute;left:50%;bottom:22%;width:16%;height:2px;translate:-50% 0;
-  background:rgb(236 233 221 / 22%);
+  background:var(--thread);
+}
+
+.art-page.paper:not(:has(.plate.spread)) .folio{
+  padding-top:1.2cqw;
+  border-top:1px solid rgb(150 128 155 / 28%);
 }
 
 /* ---- 版权页 ------------------------------------------------------ */
