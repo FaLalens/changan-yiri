@@ -79,6 +79,49 @@ test("spread halves face each other across the gutter", () => {
   }
 });
 
+test("cover keeps the mobile photo while inner pages follow viewport changes", () => {
+  const requests = [];
+  const media = { matches: true, addEventListener(name, handler) { this.change = handler; } };
+  const frame = { classList: { add() {}, remove() {} } };
+  const photo = (stem, isCover) => ({
+    dataset: { photo: stem },
+    closest: (selector) => selector === ".cover-plate" ? (isCover ? frame : null) : frame,
+  });
+  const cover = photo("zhonglou/XiAn_20260829_210250", true);
+  const inner = photo("defuxiang/XiAn_20260829_144100", false);
+  const book = {
+    dataset: { pageWidth: "480", pageHeight: "640" },
+    querySelectorAll: () => [cover, inner].map(img => ({ querySelectorAll: () => [img] })),
+  };
+  class PageFlip {
+    on() {} loadFromHTML() {}
+    getPageCount() { return 2; }
+  }
+  class Image {
+    set src(url) { requests.push(url); this.onload(); }
+  }
+  runInNewContext(script, {
+    document: {
+      documentElement: { style: { setProperty() {} } },
+      querySelector: selector => selector === "#book" ? book : { addEventListener() {} },
+    },
+    St: { PageFlip }, Image, location: { search: "" }, URLSearchParams,
+    window: { matchMedia: () => media, addEventListener() {} },
+  });
+  assert.equal(cover.src, `assets/photos/${cover.dataset.photo}@m.webp`);
+  assert.equal(inner.src, `assets/photos/${inner.dataset.photo}@m.webp`);
+  requests.length = 0;
+  media.matches = false;
+  media.change();
+  assert.equal(cover.src, `assets/photos/${cover.dataset.photo}@m.webp`);
+  assert.equal(inner.src, `assets/photos/${inner.dataset.photo}.webp`);
+  assert.deepEqual(requests, [inner.src], "Resizing never requests a desktop cover");
+  media.matches = true;
+  media.change();
+  assert.equal(inner.src, `assets/photos/${inner.dataset.photo}@m.webp`);
+  assert.ok(requests.every(url => !url.includes(cover.dataset.photo)));
+});
+
 test("focused controls keep their native keyboard actions", () => {
   const actions = [];
   const handlers = {};

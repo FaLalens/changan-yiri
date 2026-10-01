@@ -45,9 +45,9 @@ let currentPage = 0;
 let isTurning = false;
 
 /* ---- 照片按需加载 -------------------------------------------------
-   页面里先放 5KB 的模糊占位图，整本首屏不到 10KB 就能翻。
+   图片区域先显示加载图标，不请求模糊占位图。
    真图只加载"当前页 + 前后各 2 页"，翻到哪补到哪。
-   窄屏取 1200px 版本，宽屏取 2400px 版本。
+   封面固定取 1200px 版本；内页窄屏取 1200px，宽屏取 2400px。
    跨页的左右两半是同一张照片的两个 img，浏览器只会下载一次；
    但两处都得各自换 src，所以这里按元素记，不按照片编号记。 */
 const smallScreen =
@@ -56,8 +56,9 @@ const smallScreen =
     : { matches: false, addEventListener() {} };
 const done = new WeakMap();                      // img 元素 -> 已应用的 URL
 
-function photoUrl(stem) {
-  return `assets/photos/${stem}${smallScreen.matches ? "@m" : ""}.webp`;
+function photoUrl(stem, img) {
+  const isCover = Boolean(img.closest(".cover-plate"));
+  return `assets/photos/${stem}${isCover || smallScreen.matches ? "@m" : ""}.webp`;
 }
 
 function upgrade(scope) {
@@ -65,7 +66,7 @@ function upgrade(scope) {
   scope.querySelectorAll("img[data-photo]").forEach((img) => {
     const stem = img.dataset?.photo;
     if (!stem) return;
-    const url = photoUrl(stem);
+    const url = photoUrl(stem, img);
     if (done.get(img) === url) return;            // 这一处已是当前规格
     done.set(img, url);
     const frame = img.closest(".plate, .cover-plate");
