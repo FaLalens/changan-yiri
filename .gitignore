@@ -1,7 +1,5 @@
 public/
 backups/
 .agents/
-PONYTAIL-LICENSE
-AGENTS.md
 __pycache__/
 *.py[cod]
