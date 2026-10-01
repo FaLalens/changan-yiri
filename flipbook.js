@@ -97,7 +97,8 @@ function upgradeAround(page) {
 function updateControls() {
   const pageCount = pageFlip.getPageCount();
   const lastPage = pageCount - 1;
-  bookElement.dataset.edge = isTurning && (currentPage === 0 || currentPage === lastPage) ? "inside" : currentPage === 0 ? "front" : currentPage === lastPage ? "back" : "inside";
+  bookElement.dataset.edge = !isTurning && currentPage === 0 ? "front" :
+    !isTurning && currentPage === lastPage ? "back" : "inside";
 
   previousButton.disabled = currentPage === 0 || isTurning;
   nextButton.disabled = currentPage === lastPage || isTurning;
@@ -108,12 +109,11 @@ function updateControls() {
     pageSeek.setAttribute?.("aria-valuetext", `第 ${currentPage + 1} 页，共 ${pageCount} 页`);
     pageSeek.style?.setProperty("--read-progress", `${currentPage / lastPage * 100}%`);
   }
-  const progress = currentPage / lastPage;
   const stackProgress = Math.max(0, Math.min(1, (currentPage - 1) / Math.max(1, lastPage - 3)));
   bookElement.style?.setProperty("--left-stack", `${Math.round(4 + stackProgress * 10)}px`);
   bookElement.style?.setProperty("--right-stack", `${Math.round(14 - stackProgress * 10)}px`);
   // Chapter and page counter share the current left page as their anchor.
-  const activeChapter = chapterLinks.filter((link) => Number(link.dataset.chapter) <= currentPage).at(-1);
+  const activeChapter = chapterLinks.findLast((link) => Number(link.dataset.chapter) <= currentPage);
   for (const link of chapterLinks) {
     if (link === activeChapter) link.setAttribute("aria-current", "location");
     else link.removeAttribute("aria-current");
@@ -200,9 +200,12 @@ if (render) {
 }
 updateControls();
 
-const requestedPage = Number(new URLSearchParams(location.search).get("page"));
-if (Number.isInteger(requestedPage) && requestedPage >= 0 && requestedPage < pages.length) {
-  jumpToPage(requestedPage);
+const pageQuery = new URLSearchParams(location.search).get("page");
+if (pageQuery !== null) {
+  const requestedPage = Number(pageQuery);
+  if (Number.isInteger(requestedPage) && requestedPage >= 0 && requestedPage < pages.length) {
+    jumpToPage(requestedPage);
+  }
 }
 
 // 首屏：封面和开头两页立刻升级，其余等翻到再说

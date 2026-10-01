@@ -3,10 +3,10 @@ import { readFile, stat } from "node:fs/promises";
 import test from "node:test";
 import { runInNewContext } from "node:vm";
 
-const root = new URL("./", import.meta.url);
+const root = new URL("../", import.meta.url);
 const index = await readFile(new URL("index.html", root), "utf8");
 const script = await readFile(new URL("flipbook.js", root), "utf8");
-const styles = await readFile(new URL("styles.css", root), "utf8");
+const styles = await readFile(new URL("styles/site.css", root), "utf8");
 const pages = [...index.matchAll(/<article\b[^>]*class="[^"]*\bbook-page\b[^"]*"[^>]*>/g)].map(
   ([tag]) => tag,
 );
@@ -97,6 +97,7 @@ test("focused controls keep their native keyboard actions", () => {
     document, St: { PageFlip }, location: { search: "" }, URLSearchParams,
     window: { addEventListener: (name, handler) => { handlers[name] = handler; } },
   });
+  assert.deepEqual(actions, [], "No page query leaves the book on its cover");
   actions.length = 0;
   const keydown = handlers.keydown;
   keydown({ key: " ", target: { closest: () => ({}) }, preventDefault: () => { throw Error("Prevented button action"); } });

@@ -14,13 +14,11 @@
 :root{
   --zq:#354174;
   --zq-deep:#263055;
-  --zq-lift:#a7bad2;
   --cq:#8f7c9c;
   --cq-deep:#62536d;
   --cq-lift:#dfc4e4;
   --cq-wash:#e7e0eb;
   --thread:#d4bd8c;
-  --ornament:#7fb4bf;
   --paper:#f2f2ef;
   --ink:#1e2130;
   --ink-soft:#686d80;
@@ -62,13 +60,8 @@
   border:0;border-radius:0;
   box-shadow:0 1px 2px rgb(20 24 48 / 9%),0 8px 22px -9px rgb(20 24 48 / 26%);
 }
-.art-page .plate.small{width:56%}
-.art-page .plate.medium{width:84%}
 .art-page .plate.large{width:92%}
 .art-page .plate.portrait{width:82%;height:80%}
-.art-page .plate.high{top:40%}
-.art-page .plate.low{top:55%}
-.art-page .plate.aside{left:56%}
 
 /* 跨页满幅：同一张照片在左右两页各取一半，越过书脊重新拼合。
    页宽:页高 = 3:4，左右合计 3:2，恰是这批 6000x4000 原片的比例，
@@ -109,13 +102,11 @@
 .art-page .folio{
   position:absolute;bottom:5.2%;left:8.5%;right:8.5%;margin:0;z-index:4;
   display:flex;justify-content:space-between;align-items:baseline;gap:1.4em;
-  color:var(--ink-soft);
-  font:400 2.05cqw/1.4 var(--book-sans);
+  color:#5b6376;
+  font:400 2.15cqw/1.4 var(--book-sans);
   letter-spacing:.1em;
 }
 .art-page .folio i{font-style:normal;font-variant-numeric:tabular-nums}
-.art-page .folio.start{justify-content:flex-start}
-.art-page .folio.end{justify-content:flex-end}
 .art-page .folio.over{color:#f4f2f6;text-shadow:0 1px 4px rgb(6 8 20 / 72%),0 0 14px rgb(6 8 20 / 46%)}
 
 /* ---- 布面：封面与章节页 ------------------------------------------ */
@@ -302,9 +293,6 @@
 }
 .art-page .colophon p{margin:0 0 2.6cqw}
 .art-page .colophon p:last-child{margin-bottom:0}
-.art-page .colophon .small-print{font-size:1.9cqw;color:#8a8d9c}
+.art-page .colophon .small-print{font-size:1.9cqw;color:#656d80}
 
 .art-page :is(h2,p,span){letter-spacing:0}
-.art-page .folio{color:#5b6376;font-size:2.15cqw}
-.art-page .folio.over{color:#f4f2f6}
-.art-page .colophon .small-print{color:#656d80}

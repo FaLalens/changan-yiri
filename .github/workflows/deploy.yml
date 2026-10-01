@@ -25,13 +25,13 @@ jobs:
           node-version: 20
 
       - name: Check the book structure
-        run: node --test html-contract.test.mjs
+        run: node --test tests/html-contract.test.mjs
 
       - name: Assemble the site
         run: |
           mkdir -p _site
-          cp index.html styles.css flipbook.js _site/
-          cp -r style vendor assets _site/
+          cp index.html flipbook.js _site/
+          cp -r styles vendor assets _site/
           touch _site/.nojekyll
 
       - uses: actions/configure-pages@v5

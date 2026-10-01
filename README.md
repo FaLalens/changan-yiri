@@ -41,10 +41,11 @@
 
 ```
 index.html              整本书的页面结构
-styles.css              外壳：表头、舞台、翻页控件
-style/book-style.css    页面本体：纸张、图版、图注、布面
+styles/site.css         外壳：表头、舞台、翻页控件
+styles/book.css         页面本体：纸张、图版、图注、布面
 flipbook.js             翻页逻辑、键盘按钮绑定、照片按需加载
-html-contract.test.mjs  结构契约测试
+tests/html-contract.test.mjs  结构契约测试
+styles/                 样式、装饰纹理与字体
 vendor/                 PageFlip 翻页内核（MIT）
 assets/photos/{defuxiang,tangyuan,zhonglou}/*.webp    二十三张照片，长边 2400px，质量 88
 assets/photos/{defuxiang,tangyuan,zhonglou}/*@m.webp  窄屏版，长边 1200px，质量 86
@@ -83,13 +84,13 @@ scripts/build-photos.py                         从指定原片重建三套图�
 ## 检查
 
 ```bash
-node --test html-contract.test.mjs
+node --test tests/html-contract.test.mjs
 ```
 
 ## 版权
 
 照片版权归拍摄者与出镜者所有，未经许可请勿转载或另作他用。
 
-翻页内核 [PageFlip](https://github.com/Nodlik/StPageFlip) 以 MIT 许可使用，许可证见 `vendor/PAGE-FLIP-LICENSE`。正文字体 Source Serif 4 以 SIL Open Font License 使用，许可证见 `style/fonts/LICENSE.md`。
+翻页内核 [PageFlip](https://github.com/Nodlik/StPageFlip) 以 MIT 许可使用，许可证见 `vendor/PAGE-FLIP-LICENSE`。正文字体 Source Serif 4 以 SIL Open Font License 使用，许可证见 `styles/fonts/LICENSE.md`。
 
-封面题字方朵楷体使用带字体例外条款的 GPLv3，见 `style/fonts/Fandol-COPYING.txt`；手写署名 Qwitcher Grypen 使用 SIL Open Font License 1.1，见 `style/fonts/QwitcherGrypen-OFL.txt`。本地字体子集的来源见 `style/fonts/CALLIGRAPHY-SOURCES.md`。
+封面题字方朵楷体使用带字体例外条款的 GPLv3，见 `styles/fonts/Fandol-COPYING.txt`；手写署名 Qwitcher Grypen 使用 SIL Open Font License 1.1，见 `styles/fonts/QwitcherGrypen-OFL.txt`。本地字体子集的来源见 `styles/fonts/CALLIGRAPHY-SOURCES.md`。
