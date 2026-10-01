@@ -4,7 +4,7 @@
 
 ## 打开方式
 
-直接在浏览器里打开 `index.html` 即可，不需要服务器。
+直接在浏览器里打开 `src/index.html` 即可，不需要服务器。发布前运行构建脚本，GitHub Pages 使用生成的 `public/` 目录。
 
 翻页有三种方式：
 
@@ -40,16 +40,17 @@
 ## 目录
 
 ```
-index.html              整本书的页面结构
-styles/site.css         外壳：表头、舞台、翻页控件
-styles/book.css         页面本体：纸张、图版、图注、布面
-flipbook.js             翻页逻辑、键盘按钮绑定、照片按需加载
+src/index.html          整本书的页面结构
+src/styles/site.css     外壳：表头、舞台、翻页控件
+src/styles/book.css     页面本体：纸张、图版、图注、布面
+src/flipbook.js         翻页逻辑、键盘按钮绑定、照片按需加载
 tests/html-contract.test.mjs  结构契约测试
-styles/                 样式、装饰纹理与字体
-vendor/                 PageFlip 翻页内核（MIT）
-assets/photos/{defuxiang,tangyuan,zhonglou}/*.webp    二十三张修图，长边 2400px，WebP 质量 88
-assets/photos/{defuxiang,tangyuan,zhonglou}/*@m.webp  窄屏版，长边 1200px，WebP 质量 86
-assets/photos/blur/                                  极小的模糊占位图，WebP 质量 50
+src/styles/             样式、装饰纹理与字体
+src/vendor/             PageFlip 翻页内核（MIT）
+src/assets/photos/{defuxiang,tangyuan,zhonglou}/*.webp    二十三张修图，长边 2400px，WebP 质量 88
+src/assets/photos/{defuxiang,tangyuan,zhonglou}/*@m.webp  窄屏版，长边 1200px，WebP 质量 86
+src/assets/photos/blur/                                      极小的模糊占位图，WebP 质量 50
+scripts/build-site.py                                  从 src/ 生成 GitHub Pages 发布目录
 scripts/build-photos.py                              从指定目录的 *_xiutu 修图重建三套图片
 ```
 
@@ -84,6 +85,7 @@ scripts/build-photos.py                              从指定目录的 *_xiutu 
 ## 检查
 
 ```bash
+python scripts/build-site.py
 node --test tests/html-contract.test.mjs
 ```
 
@@ -91,6 +93,6 @@ node --test tests/html-contract.test.mjs
 
 照片版权归拍摄者与出镜者所有，未经许可请勿转载或另作他用。
 
-翻页内核 [PageFlip](https://github.com/Nodlik/StPageFlip) 以 MIT 许可使用，许可证见 `vendor/PAGE-FLIP-LICENSE`。正文字体 Source Serif 4 以 SIL Open Font License 使用，许可证见 `styles/fonts/LICENSE.md`。
+翻页内核 [PageFlip](https://github.com/Nodlik/StPageFlip) 以 MIT 许可使用，许可证见 `src/vendor/PAGE-FLIP-LICENSE`。正文字体 Source Serif 4 以 SIL Open Font License 使用，许可证见 `src/styles/fonts/LICENSE.md`。
 
-封面题字方朵楷体使用带字体例外条款的 GPLv3，见 `styles/fonts/Fandol-COPYING.txt`；手写署名 Qwitcher Grypen 使用 SIL Open Font License 1.1，见 `styles/fonts/QwitcherGrypen-OFL.txt`。本地字体子集的来源见 `styles/fonts/CALLIGRAPHY-SOURCES.md`。
+封面题字方朵楷体使用带字体例外条款的 GPLv3，见 `src/styles/fonts/Fandol-COPYING.txt`；手写署名 Qwitcher Grypen 使用 SIL Open Font License 1.1，见 `src/styles/fonts/QwitcherGrypen-OFL.txt`。本地字体子集的来源见 `src/styles/fonts/CALLIGRAPHY-SOURCES.md`。

@@ -3,7 +3,7 @@ import { readFile, stat } from "node:fs/promises";
 import test from "node:test";
 import { runInNewContext } from "node:vm";
 
-const root = new URL("../", import.meta.url);
+const root = new URL("../src/", import.meta.url);
 const index = await readFile(new URL("index.html", root), "utf8");
 const script = await readFile(new URL("flipbook.js", root), "utf8");
 const styles = await readFile(new URL("styles/site.css", root), "utf8");

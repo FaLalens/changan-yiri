@@ -43,7 +43,7 @@ def save_webp(image: Image.Image, path: Path, longest: int, quality: int) -> Non
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("source", type=Path, help="202608_XiAn source directory")
-    parser.add_argument("--output", type=Path, default=Path("assets/photos"))
+    parser.add_argument("--output", type=Path, default=Path("src/assets/photos"))
     args = parser.parse_args()
     if not features.check("webp"):
         parser.error("Pillow must be built with WebP support")

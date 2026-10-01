@@ -24,15 +24,11 @@ jobs:
         with:
           node-version: 20
 
+      - name: Build the site
+        run: python scripts/build-site.py
+
       - name: Check the book structure
         run: node --test tests/html-contract.test.mjs
-
-      - name: Assemble the site
-        run: |
-          mkdir -p _site
-          cp index.html flipbook.js _site/
-          cp -r styles vendor assets _site/
-          touch _site/.nojekyll
 
       - uses: actions/configure-pages@v5
         with:
@@ -40,7 +36,7 @@ jobs:
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: _site
+          path: public
 
   deploy:
     needs: build
