@@ -68,17 +68,21 @@ function upgrade(scope) {
     const url = photoUrl(stem);
     if (done.get(img) === url) return;            // 这一处已是当前规格
     done.set(img, url);
+    const frame = img.closest(".plate, .cover-plate");
+    frame?.classList.add("photo-loading");
     const next = new Image();
     next.decoding = "async";
     next.onload = () => {
       if (done.get(img) === url) {
         img.src = url;
+        frame?.classList.remove("photo-loading");
         img.closest(".book-page")?.classList.remove("photo-error");
       }
     };
     next.onerror = () => {
       if (done.get(img) === url) {
         done.delete(img);
+        frame?.classList.remove("photo-loading");
         img.closest(".book-page")?.classList.add("photo-error");
       }
     };

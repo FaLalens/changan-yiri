@@ -7,6 +7,7 @@ const root = new URL("../src/", import.meta.url);
 const index = await readFile(new URL("index.html", root), "utf8");
 const script = await readFile(new URL("flipbook.js", root), "utf8");
 const styles = await readFile(new URL("styles/site.css", root), "utf8");
+const bookStyles = await readFile(new URL("styles/book.css", root), "utf8");
 const pages = [...index.matchAll(/<article\b[^>]*class="[^"]*\bbook-page\b[^"]*"[^>]*>/g)].map(
   ([tag]) => tag,
 );
@@ -21,6 +22,8 @@ test("template is vanilla HTML", () => {
   assert.match(script, /loadFromHTML\(pages\)/);
   assert.match(script, /bookElement\.dataset\.pageWidth/);
   assert.match(script, /bookElement\.dataset\.pageHeight/);
+  assert.doesNotMatch(index, /src="assets\/photos\/blur\//);
+  assert.match(bookStyles, /photo-loading-spin/);
   assert.match(styles, /\.book-page\.\--left::before/);
   assert.match(styles, /\.book-page\.\--right::before/);
   assert.match(styles, /z-index:\s*3/);

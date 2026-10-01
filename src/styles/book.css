@@ -60,6 +60,18 @@
   border:0;border-radius:0;
   box-shadow:0 1px 2px rgb(20 24 48 / 9%),0 8px 22px -9px rgb(20 24 48 / 26%);
 }
+.art-page .plate.photo-loading::before,
+.art-page .cover-plate.photo-loading::before{
+  position:absolute;left:50%;top:50%;z-index:4;
+  width:22px;height:22px;box-sizing:border-box;
+  border:1px solid var(--zq);border-right-color:transparent;
+  border-radius:50%;content:"";pointer-events:none;
+  transform:translate(-50%,-50%);
+  animation:photo-loading-spin 900ms linear infinite;
+}
+.art-page .plate img:not([src]),
+.art-page .cover-plate img:not([src]){opacity:0}
+@keyframes photo-loading-spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
 .art-page .plate.large{width:92%}
 .art-page .plate.portrait{width:82%;height:80%}
 
