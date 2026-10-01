@@ -47,10 +47,10 @@ flipbook.js             翻页逻辑、键盘按钮绑定、照片按需加载
 tests/html-contract.test.mjs  结构契约测试
 styles/                 样式、装饰纹理与字体
 vendor/                 PageFlip 翻页内核（MIT）
-assets/photos/{defuxiang,tangyuan,zhonglou}/*.webp    二十三张照片，长边 2400px，质量 88
-assets/photos/{defuxiang,tangyuan,zhonglou}/*@m.webp  窄屏版，长边 1200px，质量 86
-assets/photos/blur/                             极小的模糊占位图
-scripts/build-photos.py                         从指定原片重建三套图片
+assets/photos/{defuxiang,tangyuan,zhonglou}/*.webp    二十三张修图，长边 2400px，WebP 质量 88
+assets/photos/{defuxiang,tangyuan,zhonglou}/*@m.webp  窄屏版，长边 1200px，WebP 质量 86
+assets/photos/blur/                                  极小的模糊占位图，WebP 质量 50
+scripts/build-photos.py                              从指定目录的 *_xiutu 修图重建三套图片
 ```
 
 ## 照片是怎么加载的

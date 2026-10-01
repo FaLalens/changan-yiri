@@ -1,7 +1,8 @@
-"""Build the selected album photos from the original Xi'an JPEGs.
+"""Build the selected album photos from the retouched Xi'an JPEGs.
 
 Usage: python scripts/build-photos.py E:/29201/图片/202608_XiAn
-Requires Pillow with WebP support. Originals are never modified.
+The selected JPEGs live in each chapter's *_xiutu folder. Requires Pillow with
+WebP support. Sources are never modified; outputs are metadata-free WebP.
 """
 
 from __future__ import annotations
@@ -15,14 +16,17 @@ from PIL import Image, ImageOps, features
 SELECTION = {
     "defuxiang": (
         "01_20260829_德福巷",
+        "01_DeFuXiang_xiutu",
         ("144107", "144740", "145439", "145739", "150111", "153019", "163105", "163314"),
     ),
     "tangyuan": (
         "02_20260829_唐苑",
+        "02_TangYuan_xiutu",
         ("175941", "180628", "180846", "182200", "182608", "184323", "185710", "190240", "191259"),
     ),
     "zhonglou": (
         "03_20260829_钟楼",
+        "03_ZhongLou_xiutu",
         ("204936", "205711", "212910", "220313", "220748", "221006"),
     ),
 }
@@ -32,6 +36,7 @@ def save_webp(image: Image.Image, path: Path, longest: int, quality: int) -> Non
     resized = image.copy()
     resized.thumbnail((longest, longest), Image.Resampling.LANCZOS)
     path.parent.mkdir(parents=True, exist_ok=True)
+    path.unlink(missing_ok=True)
     resized.save(path, "WEBP", quality=quality, method=6)
 
 
@@ -44,8 +49,8 @@ def main() -> None:
         parser.error("Pillow must be built with WebP support")
 
     sources = [
-        (group, args.source / folder / f"XiAn_20260829_{time}.JPG")
-        for group, (folder, times) in SELECTION.items()
+        (group, args.source / folder / edited_folder / f"XiAn_20260829_{time}.JPG")
+        for group, (folder, edited_folder, times) in SELECTION.items()
         for time in times
     ]
     missing = [str(path) for _, path in sources if not path.is_file()]
