@@ -1,98 +1,108 @@
 # 长安一日
 
-一本可以在浏览器里翻的汉服写真集。全部照片摄于二〇二六年八月二十九日，西安。
+[打开相册](https://falalens.github.io/changan-yiri/)
 
-## 打开方式
+一本可以在浏览器里翻的汉服写真集，照片摄于 2026 年 8 月 29 日，西安。全书 36 页，使用 23 张照片，包含 4 个跨页。
 
-直接在浏览器里打开 `src/index.html` 即可，不需要服务器。发布前运行构建脚本，GitHub Pages 使用生成的 `public/` 目录。
+| 章节 | 拍摄时间 | 地点 |
+| --- | --- | --- |
+| 巷 | 14:41–16:33 | 德福巷 |
+| 园 | 17:59–19:12 | 唐苑 |
+| 夜 | 20:49–22:10 | 钟楼 |
 
-翻页有三种方式：
+## 阅读
 
-- 点右下角或左下角的圆形按钮
-- 键盘 `←` `→` 或空格
-- 拖动书页的角
+本地可直接用浏览器打开 [src/index.html](src/index.html)，无需启动服务。相册使用原生 HTML、CSS、JavaScript 和本地 PageFlip 内核。
 
-## 这本书
+- 翻页：底部左右按钮、键盘 `←` / `→` / 空格，或拖动书页角。
+- 跳页：顶部地点导航、底部页码滑条；`Home` 回封面，`End` 到封底。
+- 布局：窄窗口通常为单页，宽窗口为对开，实际布局由书页可用空间决定。
 
-三十六页，三个章节。
+链接加上 `?page=14` 可直接打开唐苑章节。页索引从 `0` 开始，封底为 `35`。
 
-| 章节 | 时间 | 地点 |
-|---|---|---|
-| 巷 | 14:41 至 16:33 | 德福巷 |
-| 园 | 17:59 至 19:12 | 唐苑 |
-| 夜 | 20:49 至 22:10 | 钟楼 |
+## 修改与发布
 
-用了二十三张照片，每张下面印着它的拍摄时刻。
+日常编辑 `src/`。`public/` 是生成目录，构建时会被覆盖，已加入 Git 忽略规则。
 
-书里有四个跨页：同一张照片在左右两页各取一半，翻开来越过书脊重新拼合成一整幅。
+1. 根据要修改的内容找到对应文件：
 
-## 配色
+   | 文件 | 用途 |
+   | --- | --- |
+   | [src/index.html](src/index.html) | 页面顺序、照片引用、图注与章节 |
+   | [src/flipbook.js](src/flipbook.js) | 翻页、导航、图片按需加载 |
+   | [src/styles/site.css](src/styles/site.css) | 表头、舞台、控件与响应式布局 |
+   | [src/styles/book.css](src/styles/book.css) | 纸页、布面、照片与装帧 |
 
-书里的颜色不是挑出来的，是从照片里取的。两位主角当天的衣服采样出两个主色：
+2. 在仓库根目录运行检查与构建，需要 Node.js 和 Python 3：
 
-- 靛蓝原色 `#3b4477`，布面调为 `#354174`
-- 藕紫原色 `#8f7c9c`，深色章节用 `#62536d`
+   ```bash
+   node --test tests/html-contract.test.mjs
+   python scripts/build-site.py
+   ```
 
-装帧另用了服饰金线与蓝绿色发饰的小面积点缀：书脊与纸页外沿的菱格呼应靛蓝衣服的连续花格，封面、环衬与章节的花纹呼应藕紫衣饰与发饰。照片原文件保持原样，封面通过花窗轮廓裁切显示。
+   构建会把 `src/` 完整复制到 `public/` 并生成 `.nojekyll`。可直接打开 `public/index.html` 检查发布版本。
 
-纸色用了中性冷白 `#f2f2ef`，没有用相册常见的米黄，因为米黄会压暗照片里傍晚和夜里的暖光。
+3. 提交源码并推送到 `main`。GitHub Actions 自动构建、运行测试并部署 `public/`，完成后刷新相册链接。
 
-## 目录
+   [查看部署状态](https://github.com/FaLalens/changan-yiri/actions) · [发布工作流](.github/workflows/deploy.yml)
 
-```
-src/index.html          整本书的页面结构
-src/styles/site.css     外壳：表头、舞台、翻页控件
-src/styles/book.css     页面本体：纸张、图版、图注、布面
-src/flipbook.js         翻页逻辑、键盘按钮绑定、照片按需加载
-tests/html-contract.test.mjs  结构契约测试
-src/styles/             样式、装饰纹理与字体
-src/vendor/             PageFlip 翻页内核（MIT）
-src/assets/photos/{defuxiang,tangyuan,zhonglou}/*.webp    二十三张修图，长边 2400px，WebP 质量 88
-src/assets/photos/{defuxiang,tangyuan,zhonglou}/*@m.webp  窄屏版，长边 1200px，WebP 质量 86
-src/assets/photos/blur/                                      极小的模糊占位图，WebP 质量 50
-scripts/build-site.py                                  从 src/ 生成 GitHub Pages 发布目录
-scripts/build-photos.py                              从指定目录的 *_xiutu 修图重建三套图片
-```
+## 图片加载
 
-## 照片是怎么加载的
+照片区域在请求期间显示细线墨圈，加载成功后显示照片并隐藏图标，失败时显示错误提示。页面不请求模糊占位图。
 
-一本书有二十三张照片，如果一次全下完，手机上要等很久，所以照片按需加载。
+| 图片位置 | 窗口宽度 | 使用文件 | 长边上限 |
+| --- | --- | --- | --- |
+| 封面 | 任意宽度 | `照片名@m.webp` | 1200px |
+| 内页 | ≤700px | `照片名@m.webp` | 1200px |
+| 内页 | >700px | `照片名.webp` | 2400px |
 
-图片区域先显示细线墨圈，不请求模糊占位图。只加载当前页和它附近的页，翻到哪补到哪。封面始终取 1200px 的 `@m.webp` 版本；内页窄屏取 1200px 版本，宽屏取 2400px 版本。
+只请求当前页、前 2 页和后 3 页范围内的照片，不会一次下载整本相册。前后页范围连续，保证跨页的左右半幅都能加载。
 
-当前全部图片约 7.7 MB，其中桌面版约 5.85 MB、窄屏版约 1.86 MB；按需加载避免一次下载整本。
+窗口跨过 700px 时，当前范围的内页切换图片规格，封面始终保留 `@m.webp`。再次使用同一文件时，通常复用浏览器缓存；跨页两半也使用同一个图片 URL。
 
-跨页的左右两半是同一张照片的两个 `img`，浏览器只会下载一次。
+### 重建照片
 
-## 阅读界面与装帧
+照片存放在 `src/assets/photos/` 下的 `defuxiang/`、`tangyuan/`、`zhonglou/` 三个目录。HTML 用 `data-photo="章节目录/照片名"` 引用，不包含扩展名。
 
-封面以统一的靛蓝布面、正楷题字、细金线和较小的钟楼双人照构成。双人照使用中式花窗蒙版与双道金边，位置略靠下；封面与封尾题字采用本地方朵楷体，日期与署名采用 Qwitcher Grypen 连笔手写字体，保持水平。藕紫仅用于细小花绣和署名。书脊移除侧边纹饰，保留页宽 2.5% 的浅凹槽，中心位于页宽的 2.25%，采用平底与窄折边明暗；封面构图与线框在凹槽右缘以右的区域内居中，2px 外线框以少量角部细线装饰。封面底边移除额外的实色阴影与描边。封面不再使用上下成对圆形图标。
+需要从修图原文件重新生成 WebP 时：
 
-章节页采用浅色纸面和大幅局部印花，与布面封面区分。内页保留页边菱格，移除常驻页角圆形图标；页边菱格在完整高度内等量排布，上下留白一致。花窗裁切定义内嵌于 HTML，兼容直接打开本地文件。
+1. 准备原始照片目录，保持 [scripts/build-photos.py](scripts/build-photos.py) 中 `SELECTION` 定义的子目录与文件名。
+2. 安装支持 WebP 的 Pillow：`python -m pip install Pillow`。
+3. 在仓库根目录运行：
 
-跨页保留下角绣花纹饰。唐苑 19:02 的跨页双半幅使用一致的右对齐裁切，让书缝位于两人面部之间的空隙；照片原文件不变。
+   ```bash
+   python scripts/build-photos.py "照片源目录"
+   ```
 
-书册的立体感来自页片自身的侧边、封面包边、接触阴影与书脊光影。移动与静止页片共用同一套底面与侧面，两侧用纸纹绘制纸张层叠，厚度随阅读进度调整。
+脚本生成桌面版（质量 88）和 `@m` 版（质量 86），自动校正 EXIF 方向，不修改源文件。它仍生成 `blur/` 下的历史模糊图，结构测试也检查这些文件，但相册不会加载它们。重建后按上面的步骤检查、构建与发布。
 
-纸层侧面以贴近纸面的内沿为轴向外下倾，左右镜像处理，外沿下移约 3 至 5px；底面随相同的宽度与下移量延伸到侧面的外角，保证下角相接。照片和文字保持平正。封面、封底使用独立的深色包边，合上后不外露白色纸层。
+## 设计与维护
 
-本地翻页内核修正了硬页绘制的垂直偏移，并让平放硬页使用与静止页相同的坐标。开合的最终姿态与阅读状态共用目标页组的绘制方式，避免书脊接缝与阴影在动画结束时跳变。
+配色来自当天服饰：靛蓝布面 `#354174`、藕紫点缀 `#8f7c9c`，搭配金线、蓝绿色发饰纹样和中性冷白纸面 `#f2f2ef`。
 
-柔页裁切保留页面的小数尺寸，并在底页外沿多覆盖 1px，避免抗锯齿边缘漏出旧页。跨页照片在图版内部裁切，纸张侧面不受照片裁切影响。
+封面以正楷题字、花窗裁切的钟楼双人照和细金边构成；章节页使用浅色纸面与局部印花。字体、纹理和翻页内核均随站点提供，无需请求远程字体。
 
-顶部地点导航可直接前往德福巷、唐苑和钟楼章节，底部滑条可跳页。手机显示单页，桌面显示对开；焦点位于滑条时，方向键按当前布局翻动单页或一个对开。
+<details>
+<summary>装帧与翻页维护要点</summary>
 
-## 检查
+- 书脊使用浅凹槽，封面构图在凹槽右侧区域居中；封面和封底使用独立的深色包边。
+- 纸张侧面与底面共用尺寸，左右镜像，厚度随阅读进度变化；调整时需同时检查静止页和翻动页。
+- 跨页照片在图版内裁切。唐苑 19:02 的左右半幅使用一致的右对齐裁切，让书缝避开面部。
+- 本地 PageFlip 内核包含硬页垂直偏移、小数尺寸裁切和柔页边缘覆盖修正；`flipbook.js` 还统一了硬页开合终点的绘制姿态。升级内核时需保留或重新验证这些行为。
 
-```bash
-python scripts/build-site.py
-node --test tests/html-contract.test.mjs
-```
+</details>
 
-## 版权
+[tests/html-contract.test.mjs](tests/html-contract.test.mjs) 检查页面与资源结构、封面图片规格、导航键盘行为、章节状态和硬页终点绘制。涉及布局或翻页动画的修改还需在浏览器中检查单页、对开和开合过程。
+
+## 版权与字体
 
 照片版权归拍摄者与出镜者所有，未经许可请勿转载或另作他用。
 
-翻页内核 [PageFlip](https://github.com/Nodlik/StPageFlip) 以 MIT 许可使用，许可证见 `src/vendor/PAGE-FLIP-LICENSE`。正文字体 Source Serif 4 以 SIL Open Font License 使用，许可证见 `src/styles/fonts/LICENSE.md`。
+| 资源 | 许可与说明 |
+| --- | --- |
+| PageFlip 翻页内核 | [MIT](src/vendor/PAGE-FLIP-LICENSE) |
+| Source Serif 4 正文字体 | [SIL OFL](src/styles/fonts/LICENSE.md) |
+| 方朵楷体封面题字 | [GPLv3，含字体例外条款](src/styles/fonts/Fandol-COPYING.txt) |
+| Qwitcher Grypen 署名与日期 | [SIL OFL 1.1](src/styles/fonts/QwitcherGrypen-OFL.txt) |
 
-封面题字方朵楷体使用带字体例外条款的 GPLv3，见 `src/styles/fonts/Fandol-COPYING.txt`；手写署名 Qwitcher Grypen 使用 SIL Open Font License 1.1，见 `src/styles/fonts/QwitcherGrypen-OFL.txt`。本地字体子集的来源见 `src/styles/fonts/CALLIGRAPHY-SOURCES.md`。
+字体子集来源与生成方式见 [CALLIGRAPHY-SOURCES.md](src/styles/fonts/CALLIGRAPHY-SOURCES.md)。
