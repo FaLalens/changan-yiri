@@ -8,6 +8,8 @@
 
 @font-face{font-family:"Source Serif 4";src:url("fonts/SourceSerif4-Regular.otf.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
 @font-face{font-family:"Source Serif 4";src:url("fonts/SourceSerif4-It.otf.woff2") format("woff2");font-weight:400;font-style:italic;font-display:swap}
+@font-face{font-family:"Cover Kai";src:url("fonts/FandolKai-title.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"Qwitcher Grypen";src:url("fonts/QwitcherGrypen-signature.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
 
 :root{
   --zq:#354174;
@@ -22,7 +24,7 @@
   --paper:#f2f2ef;
   --ink:#1e2130;
   --ink-soft:#686d80;
-  --book-serif:"Source Serif 4","Noto Serif SC","Songti SC",Georgia,serif;
+  --book-serif:"Source Serif 4","Noto Serif SC","Songti SC","SimSun",Georgia,serif;
   --book-sans:"Helvetica Neue",Arial,"Microsoft YaHei","PingFang SC",sans-serif;
 }
 
@@ -39,11 +41,11 @@
 }
 .art-page.paper{
   background-image:url("paper-edge.svg"),url("paper-grain.svg");
-  background-size:4% 96px,auto;
-  background-repeat:repeat-y,repeat;
+  background-size:2.5% 90%,auto;
+  background-repeat:no-repeat,repeat;
 }
-.art-page.paper.verso{background-position:left top,left top}
-.art-page.paper.recto{background-position:right top,left top}
+.art-page.paper.verso{background-position:left center,left top}
+.art-page.paper.recto{background-position:right center,left top}
 
 /* ---- 图版 -------------------------------------------------------- */
 .art-page .plate{
@@ -83,6 +85,8 @@
 }
 .art-page .plate.spread-left img{left:0}
 .art-page .plate.spread-right img{right:0}
+/* Identical alignment on both halves puts the fold between the two faces. */
+.art-page .plate.spread-face-safe img{object-position:right center}
 
 /* 跨页图注压在照片上；照片底部偶有亮部（木阶、栏杆），
    用一道由暗到透明的窄渐层兜住对比度，
@@ -115,15 +119,19 @@
 .art-page .folio.over{color:#f4f2f6;text-shadow:0 1px 4px rgb(6 8 20 / 72%),0 0 14px rgb(6 8 20 / 46%)}
 
 /* ---- 布面：封面与章节页 ------------------------------------------ */
-.art-page.cloth,
-.art-page.chapter{
+.art-page.cloth{
   color:#f1eee8;
   background-color:var(--zq);
   background-image:url("cloth-weave.svg");
   background-repeat:repeat;
 }
-.art-page.chapter{background-color:var(--zq-deep)}
-.art-page.chapter.lotus{background-color:var(--cq-deep)}
+.art-page.chapter{
+  --chapter-ink:var(--zq);
+  color:var(--chapter-ink);
+  background:#e9edf0 url("paper-grain.svg");
+}
+.art-page.chapter.lotus{--chapter-ink:var(--cq-deep);background-color:#eee7f0}
+.art-page.chapter[aria-label="第三章 钟楼"]{background-color:#e1e5ec}
 
 /* ---- 环衬 -------------------------------------------------------- */
 .art-page.endpaper{background-color:var(--cq-wash);background-image:url("paper-grain.svg")}
@@ -133,13 +141,18 @@
 .art-page.cloth::after,.art-page.chapter::after,.art-page.endpaper::after{
   position:absolute;z-index:0;content:"";pointer-events:none;
 }
-.art-page.cloth::after,.art-page.chapter::after{
-  inset:4.8%;
-  border:1px solid rgb(222 202 153 / 56%);
-  box-shadow:inset 0 0 0 5px rgb(20 28 59 / 12%),inset 0 0 0 6px rgb(222 202 153 / 27%);
-  background:url("embroidered-medallion.svg") 92% 6%/28% auto no-repeat;
+.art-page.cloth::after{
+  inset:6.5% 8% 6.5% calc(var(--hinge-right) + 8%);
+  border:2px solid rgb(212 189 140 / 48%);
+  background:url("cover-frame-corners.svg") center/100% 100% no-repeat,
+    url("cover-embroidery.svg") right 8% top 8%/25% auto no-repeat;
 }
-.art-page.chapter::after{background-position:92% 18%;background-size:38% auto}
+.art-page.chapter::after{
+  top:19%;right:-19%;width:75%;aspect-ratio:1;
+  clip-path:inset(0 25.333333% 0 0);
+  background:url("paper-rosette.svg") center/contain no-repeat;
+  opacity:.46;
+}
 .art-page.endpaper::after{
   inset:7%;opacity:.55;
   border:1px solid rgb(143 122 156 / 48%);
@@ -147,59 +160,108 @@
 }
 .art-page.cloth>*,.art-page.chapter>*{z-index:1}
 .art-page.cloth{
-  background-image:url("binding-stitch.svg"),linear-gradient(90deg,rgb(31 37 70 / 76%) 0 6%,rgb(126 108 148 / 48%) 6% 7%,transparent 7%),url("cloth-weave.svg");
-  background-position:left top,left top,left top;
-  background-size:7% 72px,auto,auto;
-  background-repeat:repeat-y,no-repeat,repeat;
+  --hinge-center:2.25%;
+  --hinge-width:2.5%;
+  --hinge-right:calc(var(--hinge-center) + var(--hinge-width) / 2);
+  --hinge-shape-center:var(--hinge-center);
+  --hinge-notch:clamp(1.5px,.45cqw,3.5px);
+  background:transparent;
 }
-.art-page.cloth.verso{
-  background-image:url("binding-stitch.svg"),linear-gradient(270deg,rgb(31 37 70 / 76%) 0 6%,rgb(126 108 148 / 48%) 6% 7%,transparent 7%),url("cloth-weave.svg");
-  background-position:right top,left top,left top;
+.art-page.cloth.verso{--hinge-shape-center:calc(100% - var(--hinge-center))}
+.art-page .cover-surface{
+  position:absolute;inset:0;z-index:0;pointer-events:none;
+  filter:drop-shadow(0 12px 8px rgb(29 38 35 / 32%));
 }
-.art-page.chapter.lotus::after{border-color:rgb(230 207 191 / 58%);box-shadow:inset 0 0 0 5px rgb(60 42 75 / 14%),inset 0 0 0 6px rgb(230 207 191 / 27%)}
+.art-page .cover-material{
+  position:absolute;inset:0;
+  background:var(--zq) url("cloth-weave.svg") repeat;
+  border-top:1px solid rgb(223 217 239 / 28%);
+  clip-path:polygon(
+    0 0,
+    calc(var(--hinge-shape-center) - var(--hinge-width) * .4) 0,
+    calc(var(--hinge-shape-center) - var(--hinge-width) * .15) var(--hinge-notch),
+    calc(var(--hinge-shape-center) + var(--hinge-width) * .15) var(--hinge-notch),
+    calc(var(--hinge-shape-center) + var(--hinge-width) * .4) 0,
+    100% 0,100% 100%,
+    calc(var(--hinge-shape-center) + var(--hinge-width) * .4) 100%,
+    calc(var(--hinge-shape-center) + var(--hinge-width) * .15) calc(100% - var(--hinge-notch)),
+    calc(var(--hinge-shape-center) - var(--hinge-width) * .15) calc(100% - var(--hinge-notch)),
+    calc(var(--hinge-shape-center) - var(--hinge-width) * .4) 100%,
+    0 100%);
+}
+.book-page.art-page.cloth::before{display:none}
+.art-page.cloth.verso::after{
+  inset:6.5% calc(var(--hinge-right) + 8%) 6.5% 8%;
+  background-position:center,left 8% top 8%;
+}
+.art-page .binding-groove{
+  position:absolute;z-index:2;top:-1px;bottom:0;
+  left:var(--hinge-center);
+  width:var(--hinge-width);translate:-50% 0;pointer-events:none;
+  background:linear-gradient(90deg,
+    rgb(9 14 32 / 0%) 0%,rgb(9 14 32 / 7%) 10%,
+    rgb(9 14 32 / 24%) 20%,rgb(9 14 32 / 42%) 32%,
+    rgb(9 14 32 / 44%) 46%,rgb(9 14 32 / 39%) 58%,
+    rgb(9 14 32 / 22%) 68%,rgb(9 14 32 / 5%) 78%,
+    rgb(190 208 232 / 7%) 88%,rgb(190 208 232 / 3%) 94%,
+    rgb(190 208 232 / 0%) 100%);
+}
+.art-page.cloth.verso .binding-groove{left:auto;right:var(--hinge-center);translate:50% 0}
+.art-page .cover-composition{position:absolute;inset:0 0 0 var(--hinge-right)}
+.art-page.cloth.verso .cover-composition{inset:0 var(--hinge-right) 0 0}
 
 /* ---- 封面 -------------------------------------------------------- */
 .art-page .cover-title{
-  position:absolute;left:13%;right:11%;top:14.5%;margin:0;
-  font:400 10.6cqw/1.14 var(--book-serif);
-  letter-spacing:.04em;
-  text-shadow:0 1px 0 rgb(9 12 28 / 26%);
-}
-.art-page .cover-sub{
-  position:absolute;left:14%;top:31.5%;margin:0;
-  font:400 2.4cqw/1.7 var(--book-sans);letter-spacing:.28em;color:var(--thread);
+  position:absolute;left:18%;top:14%;margin:0;
+  writing-mode:vertical-rl;
+  font:400 13cqw/1.12 "Cover Kai","KaiTi",serif;
+  letter-spacing:0;
+  text-shadow:1px 2px 2px rgb(9 12 28 / 40%);
 }
 .art-page .cover-meta{
-  position:absolute;left:14%;bottom:13.5%;margin:0;
-  font:400 2.3cqw/1.85 var(--book-sans);letter-spacing:.16em;color:#e4dace;
+  position:absolute;left:18%;bottom:15%;margin:0;
+  display:grid;gap:1.5cqw;
+  font:400 5.8cqw/1.1 "Qwitcher Grypen",cursive;color:#ddcdb0;
+}
+.art-page .cover-meta time{display:block}
+.art-page .cover-signature{
+  font:400 8.2cqw/1.1 "Qwitcher Grypen",cursive;color:var(--cq-lift);
+  display:block;
 }
 .art-page .cover-plate{
-  position:absolute;right:12.5%;bottom:13.5%;width:35%;margin:0;
-  padding:3px;background:var(--thread);
-  box-shadow:0 6px 15px rgb(6 9 24 / 36%);
+  position:absolute;right:18%;bottom:20%;width:33%;aspect-ratio:4/7;margin:0;
+  filter:drop-shadow(2px 5px 5px rgb(6 9 24 / 35%));
 }
-.art-page .cover-plate img{display:block;width:100%;height:auto;border:0;border-radius:0}
+.art-page .cover-plate::after{
+  position:absolute;inset:0;content:"";pointer-events:none;
+  background:url("flower-window-rim.svg") center/100% 100% no-repeat;
+}
+.art-page .cover-plate img{
+  display:block;width:100%;height:100%;object-fit:cover;
+  border:0;border-radius:0;
+  clip-path:url(#cover-window);
+}
 
 /* ---- 章节开篇 ---------------------------------------------------- */
 .art-page .chapter-no{
-  position:absolute;left:14%;top:20.5%;margin:0;
-  font:400 5.6cqw/1 var(--book-serif);color:var(--cq-lift);letter-spacing:.14em;
+  position:absolute;left:17%;top:20.5%;margin:0;
+  font:400 5cqw/1 var(--book-serif);color:var(--cq-deep);letter-spacing:0;
 }
 .art-page .chapter-name{
-  position:absolute;left:12.5%;top:30.5%;margin:0;
-  font:400 21cqw/1 var(--book-serif);letter-spacing:.02em;
+  position:absolute;left:16%;top:31%;margin:0;
+  font:400 22cqw/1 var(--book-serif);letter-spacing:0;
 }
 .art-page .chapter-meta{
-  position:absolute;left:14.5%;bottom:22.5%;margin:0;
-  font:400 2.25cqw/1.9 var(--book-sans);letter-spacing:.15em;color:#e1d9e3;
+  position:absolute;left:17%;bottom:17%;margin:0;
+  font:400 2.5cqw/1.9 var(--book-sans);letter-spacing:0;color:var(--chapter-ink);
 }
 .art-page .chapter-rule{
-  position:absolute;left:14.5%;bottom:16.5%;width:32%;height:3px;display:flex;
-  background:rgb(236 233 221 / 18%);
+  position:absolute;left:17%;bottom:27%;width:28%;height:2px;margin:0;display:flex;
+  background:var(--thread);
 }
 .art-page .chapter-rule b{display:block;height:100%}
-.art-page .chapter-rule b.zq{background:var(--zq-lift)}
-.art-page .chapter-rule b.cq{background:var(--cq-lift)}
+.art-page .chapter-rule b.zq{background:var(--zq)}
+.art-page .chapter-rule b.cq{background:var(--cq)}
 
 /* ---- 扉页 -------------------------------------------------------- */
 .art-page .titleblock{position:absolute;left:14%;right:14%;top:28%}
@@ -220,8 +282,8 @@
 /* ---- 封底 -------------------------------------------------------- */
 .art-page .back-mark{
   position:absolute;left:0;right:0;bottom:15%;margin:0;
-  text-align:center;text-indent:.5em;
-  font:400 3cqw/1 var(--book-sans);letter-spacing:.5em;color:#b0b5d8;
+  text-align:center;
+  font:400 4.6cqw/1.2 "Cover Kai","KaiTi",serif;letter-spacing:0;color:#c8ccdf;
 }
 .art-page .back-rule{
   position:absolute;left:50%;bottom:22%;width:16%;height:2px;translate:-50% 0;
@@ -241,3 +303,8 @@
 .art-page .colophon p{margin:0 0 2.6cqw}
 .art-page .colophon p:last-child{margin-bottom:0}
 .art-page .colophon .small-print{font-size:1.9cqw;color:#8a8d9c}
+
+.art-page :is(h2,p,span){letter-spacing:0}
+.art-page .folio{color:#5b6376;font-size:2.15cqw}
+.art-page .folio.over{color:#f4f2f6}
+.art-page .colophon .small-print{color:#656d80}

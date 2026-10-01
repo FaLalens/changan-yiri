@@ -8,294 +8,192 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+  <defs>
+    <clipPath id="cover-window" clipPathUnits="objectBoundingBox">
+      <path transform="scale(.004166666667 .002380952381)" d="M56 5H184C184 23 203 39 235 39V381C203 381 184 397 184 415H56C56 397 37 381 5 381V39C37 39 56 23 56 5Z"/>
+    </clipPath>
+  </defs>
+</svg>
 <a class="skip-link" href="#book">跳到相册</a>
 <main class="room">
   <header class="book-header">
-    <span>2026.08.29</span>
-    <h1>长安一日</h1>
-    <span id="orientation">对开</span>
+    <div class="book-identity">
+      <h1>长安一日</h1>
+      <time datetime="2026-08-29">2026.08.29</time>
+    </div>
+    <nav class="chapter-nav" aria-label="地点章节">
+      <a href="?page=4" data-chapter="4"><span>壹</span>德福巷</a>
+      <a href="?page=14" data-chapter="14"><span>贰</span>唐苑</a>
+      <a href="?page=26" data-chapter="26"><span>叁</span>钟楼</a>
+    </nav>
+    <div class="book-edition"><span>CQ · ZQ</span><span id="orientation">对开</span></div>
   </header>
 
   <section class="stage" aria-label="可翻页的写真集" aria-describedby="book-help">
     <div class="book-rig">
       <div id="book" class="book" data-page-width="480" data-page-height="640" tabindex="-1">
 
-        <!-- 1 封面 -->
         <article class="book-page art-page cloth recto" data-density="hard" aria-label="封面">
-          <h2 class="cover-title">长安一日</h2>
-          <p class="cover-sub">汉服写真 · 西安</p>
-          <p class="cover-meta">2026.08.29<br>CQ · ZQ</p>
-          <figure class="cover-plate">
-            <img src="assets/photos/blur/DSC01154.webp" data-photo="DSC01154" width="1350" height="2400" alt="两位女子并排站在亮着灯的钟楼前">
-          </figure>
+          <div class="cover-surface" aria-hidden="true"><div class="cover-material"><span class="binding-groove"></span></div></div>
+          <div class="cover-composition">
+            <h2 class="cover-title">长安一日</h2>
+            <p class="cover-meta"><time datetime="2026-08-29">2026.08.29</time><span class="cover-signature">CQ · ZQ</span></p>
+            <figure class="cover-plate">
+              <img src="assets/photos/blur/zhonglou/XiAn_20260829_220748.webp" data-photo="zhonglou/XiAn_20260829_220748" width="3376" height="6000" alt="两位身着靛蓝和藕紫汉服的女子站在灯火通明的钟楼前">
+            </figure>
+          </div>
         </article>
 
-        <!-- 2 前环衬 -->
         <article class="book-page art-page endpaper verso" aria-label="前环衬"></article>
-
-        <!-- 3 扉页 -->
         <article class="book-page art-page paper recto" aria-label="扉页">
           <div class="titleblock">
             <h2>长安一日</h2>
             <p class="sub">汉服写真 · 西安</p>
-            <p class="meta">二〇二六年八月二十九日<br>德福巷 · 唐苑 · 钟楼<br>四十六幅中的三十二幅</p>
+            <p class="meta">二〇二六年八月二十九日<br>德福巷 · 唐苑 · 钟楼<br>二十三幅写真</p>
           </div>
         </article>
-
-        <!-- 4 版权页 -->
         <article class="book-page art-page paper verso" aria-label="版权页">
           <div class="colophon">
             <p>长安一日</p>
-            <p>照片摄于二〇二六年八月二十九日，西安。<br>妆造与拍摄当日起于午后，止于深夜。</p>
-            <p class="small-print">全书未使用生成式图像。版面配色取自照片中两位主角所着的汉服：靛蓝与藕紫。</p>
+            <p>照片摄于二〇二六年八月二十九日，西安。<br>从德福巷的午后，到钟楼的夜色。</p>
+            <p class="small-print">全书未使用生成式图像。版面配色取自两位主角所着的汉服：靛蓝与藕紫。</p>
           </div>
         </article>
 
-        <!-- 5 章首 妆 -->
-        <article class="book-page art-page chapter recto" aria-label="第一章 妆">
+        <article class="book-page art-page chapter recto" aria-label="第一章 德福巷">
           <p class="chapter-no">壹</p>
-          <h2 class="chapter-name">妆</h2>
-          <p class="chapter-meta">14:41 至 15:30<br>德福巷</p>
+          <h2 class="chapter-name">巷</h2>
+          <p class="chapter-meta">14:41 至 16:33<br>德福巷</p>
           <p class="chapter-rule"><b class="cq" style="flex:1"></b><b class="zq" style="flex:1"></b></p>
         </article>
-
-        <!-- 6 -->
-        <article class="book-page art-page paper verso" aria-label="第一图">
-          <figure class="plate medium"><img src="assets/photos/blur/DSC00843.webp" data-photo="DSC00843" alt="一位穿靛蓝汉服的女子抬手掩住面颊，双眼闭合"></figure>
+        <article class="book-page art-page paper verso" aria-label="德福巷 第一图">
+          <figure class="plate medium"><img src="assets/photos/blur/defuxiang/XiAn_20260829_144107.webp" data-photo="defuxiang/XiAn_20260829_144107" alt="靛蓝汉服女子垂眼坐在浅色墙前"></figure>
           <p class="folio"><i>2026.08.29 14:41</i><span>德福巷</span></p>
         </article>
-
-        <!-- 7 -->
-        <article class="book-page art-page paper recto" aria-label="第二图">
-          <figure class="plate medium"><img src="assets/photos/blur/DSC00847.webp" data-photo="DSC00847" alt="一位穿藕紫汉服的女子低头垂眼，站在白墙前"></figure>
+        <article class="book-page art-page paper recto" aria-label="德福巷 第二图">
+          <figure class="plate medium"><img src="assets/photos/blur/defuxiang/XiAn_20260829_144740.webp" data-photo="defuxiang/XiAn_20260829_144740" alt="藕紫汉服女子望向左侧，另一位女子在画面边缘"></figure>
           <p class="folio"><i>2026.08.29 14:47</i><span>德福巷</span></p>
         </article>
-
-        <!-- 8 -->
-        <article class="book-page art-page paper verso" aria-label="第三图">
-          <figure class="plate large"><img src="assets/photos/blur/DSC00850.webp" data-photo="DSC00850" alt="一位穿藕紫汉服的女子含笑看向镜头，另一位女子在画面右缘露出半身"></figure>
-          <p class="folio"><i>2026.08.29 14:47</i><span>德福巷</span></p>
+        <article class="book-page art-page paper verso" aria-label="德福巷 第三图">
+          <figure class="plate medium"><img src="assets/photos/blur/defuxiang/XiAn_20260829_145439.webp" data-photo="defuxiang/XiAn_20260829_145439" alt="两位女子并肩低头看桌上的食物"></figure>
+          <p class="folio"><i>2026.08.29 14:54</i><span>德福巷</span></p>
         </article>
-
-        <!-- 9 -->
-        <article class="book-page art-page paper recto" aria-label="第四图">
-          <figure class="plate small low"><img src="assets/photos/blur/DSC00852.webp" data-photo="DSC00852" alt="桌上摊开的一份小食，俯视拍摄"></figure>
-          <p class="folio"><i>2026.08.29 14:50</i><span>德福巷</span></p>
-        </article>
-
-        <!-- 10 至 11 跨页：两位女子同时低头 -->
-        <article class="book-page art-page paper verso" aria-label="第五图 左半">
-          <figure class="plate spread spread-left"><img src="assets/photos/blur/DSC00853.webp" data-photo="DSC00853" alt="两位女子并排坐着，同时低头看向桌面的餐食"></figure>
-          <p class="folio over"><i>2026.08.29 14:54</i><span>德福巷</span></p>
-        </article>
-        <article class="book-page art-page paper recto" aria-label="第五图 右半">
-          <figure class="plate spread spread-right"><img src="assets/photos/blur/DSC00853.webp" data-photo="DSC00853" alt="" aria-hidden="true"></figure>
-        </article>
-
-        <!-- 12 -->
-        <article class="book-page art-page paper verso" aria-label="第六图">
-          <figure class="plate large"><img src="assets/photos/blur/DSC00857.webp" data-photo="DSC00857" alt="一位穿靛蓝汉服的女子举着餐叉笑出声，另一只手掩在唇边"></figure>
+        <article class="book-page art-page paper recto" aria-label="德福巷 第四图">
+          <figure class="plate large"><img src="assets/photos/blur/defuxiang/XiAn_20260829_145739.webp" data-photo="defuxiang/XiAn_20260829_145739" alt="靛蓝汉服女子在餐桌前掩面轻笑"></figure>
           <p class="folio"><i>2026.08.29 14:57</i><span>德福巷</span></p>
         </article>
-
-        <!-- 13 -->
-        <article class="book-page art-page paper recto" aria-label="第七图">
-          <figure class="plate portrait"><img src="assets/photos/blur/DSC00874.webp" data-photo="DSC00874" width="1600" height="2400" alt="一位穿藕紫汉服的女子双手托腮，撑在桌边看向镜头"></figure>
+        <article class="book-page art-page paper verso" aria-label="德福巷 第五图">
+          <figure class="plate portrait"><img src="assets/photos/blur/defuxiang/XiAn_20260829_150111.webp" data-photo="defuxiang/XiAn_20260829_150111" alt="藕紫汉服女子坐在桌边双手托腮"></figure>
           <p class="folio"><i>2026.08.29 15:01</i><span>德福巷</span></p>
         </article>
-
-        <!-- 14 -->
-        <article class="book-page art-page paper verso" aria-label="第八图">
-          <figure class="plate medium"><img src="assets/photos/blur/DSC00876.webp" data-photo="DSC00876" alt="一位穿藕紫汉服的女子微微仰头看向左上方，身后是空白的墙"></figure>
+        <article class="book-page art-page paper recto" aria-label="德福巷 第六图">
+          <figure class="plate medium"><img src="assets/photos/blur/defuxiang/XiAn_20260829_153019.webp" data-photo="defuxiang/XiAn_20260829_153019" alt="藕紫汉服女子抬头望向一侧"></figure>
           <p class="folio"><i>2026.08.29 15:30</i><span>德福巷</span></p>
         </article>
-
-        <!-- 15 章首 食 -->
-        <article class="book-page art-page chapter lotus recto" aria-label="第二章 食">
-          <p class="chapter-no">贰</p>
-          <h2 class="chapter-name">食</h2>
-          <p class="chapter-meta">16:31 至 16:33<br>德福巷</p>
-          <p class="chapter-rule"><b class="cq" style="flex:1"></b><b class="zq" style="flex:1"></b></p>
+        <article class="book-page art-page paper verso" aria-label="德福巷 第七图 左半">
+          <figure class="plate spread spread-left"><img src="assets/photos/blur/defuxiang/XiAn_20260829_163105.webp" data-photo="defuxiang/XiAn_20260829_163105" alt="两位女子坐在饮品店里，以小食相伴"></figure>
+          <p class="folio over"><i>2026.08.29 16:31</i><span>德福巷</span></p>
         </article>
-
-        <!-- 16 -->
-        <article class="book-page art-page paper verso" aria-label="第九图">
-          <figure class="plate large"><img src="assets/photos/blur/DSC00886.webp" data-photo="DSC00886" alt="两位女子并肩坐在饮品店里，身后是彩色的墙面装饰"></figure>
-          <p class="folio"><i>2026.08.29 16:31</i><span>德福巷</span></p>
+        <article class="book-page art-page paper recto" aria-label="德福巷 第七图 右半">
+          <figure class="plate spread spread-right"><img src="assets/photos/blur/defuxiang/XiAn_20260829_163105.webp" data-photo="defuxiang/XiAn_20260829_163105" alt="" aria-hidden="true"></figure>
         </article>
-
-        <!-- 17 -->
-        <article class="book-page art-page paper recto" aria-label="第十图">
-          <figure class="plate portrait"><img src="assets/photos/blur/DSC00891.webp" data-photo="DSC00891" width="1600" height="2400" alt="一位女子抬手掀开肩上的薄纱，另一位女子站在她身旁"></figure>
-          <p class="folio"><i>2026.08.29 16:32</i><span>德福巷</span></p>
-        </article>
-
-        <!-- 18 -->
-        <article class="book-page art-page paper verso" aria-label="第十一图">
-          <figure class="plate portrait"><img src="assets/photos/blur/DSC00893.webp" data-photo="DSC00893" width="1600" height="2400" alt="两位女子同时把食指竖在唇边"></figure>
+        <article class="book-page art-page paper verso" aria-label="德福巷 第八图">
+          <figure class="plate portrait"><img src="assets/photos/blur/defuxiang/XiAn_20260829_163314.webp" data-photo="defuxiang/XiAn_20260829_163314" alt="两位女子并排坐着品尝小食"></figure>
           <p class="folio"><i>2026.08.29 16:33</i><span>德福巷</span></p>
         </article>
 
-        <!-- 19 章首 园 -->
-        <article class="book-page art-page chapter recto" aria-label="第三章 园">
-          <p class="chapter-no">叁</p>
+        <article class="book-page art-page chapter lotus recto" aria-label="第二章 唐苑">
+          <p class="chapter-no">贰</p>
           <h2 class="chapter-name">园</h2>
-          <p class="chapter-meta">18:00 至 19:19<br>唐苑</p>
+          <p class="chapter-meta">17:59 至 19:12<br>唐苑</p>
           <p class="chapter-rule"><b class="cq" style="flex:1"></b><b class="zq" style="flex:1"></b></p>
         </article>
-
-        <!-- 20 -->
-        <article class="book-page art-page paper verso" aria-label="第十二图">
-          <figure class="plate portrait"><img src="assets/photos/blur/DSC00905.webp" data-photo="DSC00905" width="1600" height="2400" alt="一位穿藕紫汉服的女子立在池边，团扇正对着镜头"></figure>
-          <p class="folio"><i>2026.08.29 18:00</i><span>唐苑</span></p>
+        <article class="book-page art-page paper verso" aria-label="唐苑 第一图">
+          <figure class="plate portrait"><img src="assets/photos/blur/tangyuan/XiAn_20260829_175941.webp" data-photo="tangyuan/XiAn_20260829_175941" alt="藕紫汉服女子在水边以团扇轻触树枝"></figure>
+          <p class="folio"><i>2026.08.29 17:59</i><span>唐苑</span></p>
         </article>
-
-        <!-- 21 -->
-        <article class="book-page art-page paper recto" aria-label="第十三图">
-          <figure class="plate medium"><img src="assets/photos/blur/DSC00913.webp" data-photo="DSC00913" alt="一位穿靛蓝汉服的女子抬眼看向斜上方，手里握着团扇"></figure>
+        <article class="book-page art-page paper recto" aria-label="唐苑 第二图">
+          <figure class="plate medium"><img src="assets/photos/blur/tangyuan/XiAn_20260829_180628.webp" data-photo="tangyuan/XiAn_20260829_180628" alt="靛蓝汉服女子在碧绿池水前端详团扇"></figure>
           <p class="folio"><i>2026.08.29 18:06</i><span>唐苑</span></p>
         </article>
-
-        <!-- 22 -->
-        <article class="book-page art-page paper verso" aria-label="第十四图">
-          <figure class="plate large"><img src="assets/photos/blur/DSC00916.webp" data-photo="DSC00916" alt="一位穿靛蓝汉服的女子背对镜头张开手臂，身后是绿荫与水岸"></figure>
-          <p class="folio"><i>2026.08.29 18:07</i><span>唐苑</span></p>
-        </article>
-
-        <!-- 23 -->
-        <article class="book-page art-page paper recto" aria-label="第十五图">
-          <figure class="plate portrait"><img src="assets/photos/blur/DSC00918.webp" data-photo="DSC00918" width="1600" height="2400" alt="一位穿靛蓝汉服的女子立于水边栏杆前，团扇举在身侧"></figure>
+        <article class="book-page art-page paper verso" aria-label="唐苑 第三图">
+          <figure class="plate portrait"><img src="assets/photos/blur/tangyuan/XiAn_20260829_180846.webp" data-photo="tangyuan/XiAn_20260829_180846" alt="靛蓝汉服女子立于池边，手持团扇"></figure>
           <p class="folio"><i>2026.08.29 18:08</i><span>唐苑</span></p>
         </article>
-
-        <!-- 24 至 25 跨页：池边举臂 -->
-        <article class="book-page art-page paper verso" aria-label="第十六图 左半">
-          <figure class="plate spread spread-left"><img src="assets/photos/blur/DSC00946.webp" data-photo="DSC00946" alt="两位女子并肩站在池边，同时向两侧举起手臂"></figure>
-          <p class="folio over"><i>2026.08.29 18:20</i><span>唐苑</span></p>
+        <article class="book-page art-page paper recto" aria-label="唐苑 第四图">
+          <figure class="plate large"><img src="assets/photos/blur/tangyuan/XiAn_20260829_182200.webp" data-photo="tangyuan/XiAn_20260829_182200" alt="两位女子在池边并肩张开双臂"></figure>
+          <p class="folio"><i>2026.08.29 18:22</i><span>唐苑</span></p>
         </article>
-        <article class="book-page art-page paper recto" aria-label="第十六图 右半">
-          <figure class="plate spread spread-right"><img src="assets/photos/blur/DSC00946.webp" data-photo="DSC00946" alt="" aria-hidden="true"></figure>
+        <article class="book-page art-page paper verso" aria-label="唐苑 第五图 左半">
+          <figure class="plate spread spread-left"><img src="assets/photos/blur/tangyuan/XiAn_20260829_182608.webp" data-photo="tangyuan/XiAn_20260829_182608" alt="两位女子倚在唐苑的红柱长廊边"></figure>
+          <p class="folio over"><i>2026.08.29 18:26</i><span>唐苑</span></p>
         </article>
-
-        <!-- 26 -->
-        <article class="book-page art-page paper verso" aria-label="第十七图">
-          <figure class="plate large"><img src="assets/photos/blur/DSC00963.webp" data-photo="DSC00963" alt="傍晚的红柱长廊里，两位女子一高一低举着团扇"></figure>
-          <p class="folio"><i>2026.08.29 18:28</i><span>唐苑</span></p>
+        <article class="book-page art-page paper recto" aria-label="唐苑 第五图 右半">
+          <figure class="plate spread spread-right"><img src="assets/photos/blur/tangyuan/XiAn_20260829_182608.webp" data-photo="tangyuan/XiAn_20260829_182608" alt="" aria-hidden="true"></figure>
         </article>
-
-        <!-- 27 -->
-        <article class="book-page art-page paper recto" aria-label="第十八图">
-          <figure class="plate small"><img src="assets/photos/blur/DSC00974.webp" data-photo="DSC00974" alt="两位女子在池边合手比出一颗心"></figure>
+        <article class="book-page art-page paper verso" aria-label="唐苑 第六图">
+          <figure class="plate large"><img src="assets/photos/blur/tangyuan/XiAn_20260829_184323.webp" data-photo="tangyuan/XiAn_20260829_184323" alt="两位女子在长廊前对镜头摆出俏皮的手势"></figure>
           <p class="folio"><i>2026.08.29 18:43</i><span>唐苑</span></p>
         </article>
-
-        <!-- 28 -->
-        <article class="book-page art-page paper verso" aria-label="第十九图">
-          <figure class="plate medium"><img src="assets/photos/blur/DSC01001.webp" data-photo="DSC01001" alt="一位女子坐在石阶上，另一位站在她身旁"></figure>
+        <article class="book-page art-page paper recto" aria-label="唐苑 第七图">
+          <figure class="plate medium"><img src="assets/photos/blur/tangyuan/XiAn_20260829_185710.webp" data-photo="tangyuan/XiAn_20260829_185710" alt="两位女子一高一低坐在园中的石阶与栏杆旁"></figure>
           <p class="folio"><i>2026.08.29 18:57</i><span>唐苑</span></p>
         </article>
-
-        <!-- 29 -->
-        <article class="book-page art-page paper recto" aria-label="第二十图">
-          <figure class="plate large"><img src="assets/photos/blur/DSC01015.webp" data-photo="DSC01015" alt="两位女子面对面站着笑作一团"></figure>
-          <p class="folio"><i>2026.08.29 19:02</i><span>唐苑</span></p>
+        <article class="book-page art-page paper verso" aria-label="唐苑 第八图 左半">
+          <figure class="plate spread spread-left spread-face-safe"><img src="assets/photos/blur/tangyuan/XiAn_20260829_190240.webp" data-photo="tangyuan/XiAn_20260829_190240" alt="两位女子坐在石阶边相视微笑"></figure>
+          <p class="folio over"><i>2026.08.29 19:02</i><span>唐苑</span></p>
+        </article>
+        <article class="book-page art-page paper recto" aria-label="唐苑 第八图 右半">
+          <figure class="plate spread spread-right spread-face-safe"><img src="assets/photos/blur/tangyuan/XiAn_20260829_190240.webp" data-photo="tangyuan/XiAn_20260829_190240" alt="" aria-hidden="true"></figure>
+        </article>
+        <article class="book-page art-page paper verso" aria-label="唐苑 第九图">
+          <figure class="plate large"><img src="assets/photos/blur/tangyuan/XiAn_20260829_191259.webp" data-photo="tangyuan/XiAn_20260829_191259" alt="藕紫汉服女子在暮色中的树下举起团扇"></figure>
+          <p class="folio"><i>2026.08.29 19:12</i><span>唐苑</span></p>
         </article>
 
-        <!-- 30 至 31 跨页：台阶前的对称合影 -->
-        <article class="book-page art-page paper verso" aria-label="第二十一图 左半">
-          <figure class="plate spread spread-left"><img src="assets/photos/blur/DSC01024.webp" data-photo="DSC01024" alt="两位女子并排站在石阶前，同时看向镜头"></figure>
-          <p class="folio over"><i>2026.08.29 19:03</i><span>唐苑</span></p>
-        </article>
-        <article class="book-page art-page paper recto" aria-label="第二十一图 右半">
-          <figure class="plate spread spread-right"><img src="assets/photos/blur/DSC01024.webp" data-photo="DSC01024" alt="" aria-hidden="true"></figure>
-        </article>
-
-        <!-- 32 -->
-        <article class="book-page art-page paper verso" aria-label="第二十二图">
-          <figure class="plate large"><img src="assets/photos/blur/DSC01048.webp" data-photo="DSC01048" alt="两位女子站在写着博物馆三个字的墙面下，天空是粉橙色的晚霞"></figure>
-          <p class="folio"><i>2026.08.29 19:19</i><span>唐苑</span></p>
-        </article>
-
-        <!-- 33 章首 夜 -->
-        <article class="book-page art-page chapter lotus recto" aria-label="第四章 夜">
-          <p class="chapter-no">肆</p>
+        <article class="book-page art-page chapter recto" aria-label="第三章 钟楼">
+          <p class="chapter-no">叁</p>
           <h2 class="chapter-name">夜</h2>
-          <p class="chapter-meta">20:18 至 22:07<br>钟楼</p>
+          <p class="chapter-meta">20:49 至 22:10<br>钟楼</p>
           <p class="chapter-rule"><b class="cq" style="flex:1"></b><b class="zq" style="flex:1"></b></p>
         </article>
-
-        <!-- 34 -->
-        <article class="book-page art-page paper verso" aria-label="第二十三图">
-          <figure class="plate large"><img src="assets/photos/blur/DSC01073.webp" data-photo="DSC01073" alt="一位女子的侧脸特写，发间的蝶形发饰清晰可辨"></figure>
-          <p class="folio"><i>2026.08.29 20:18</i><span>钟楼</span></p>
+        <article class="book-page art-page paper verso" aria-label="钟楼 第一图">
+          <figure class="plate large"><img src="assets/photos/blur/zhonglou/XiAn_20260829_204936.webp" data-photo="zhonglou/XiAn_20260829_204936" alt="藕紫汉服女子在灯火通明的钟楼前举起团扇"></figure>
+          <p class="folio"><i>2026.08.29 20:49</i><span>钟楼</span></p>
         </article>
-
-        <!-- 35 -->
-        <article class="book-page art-page paper recto" aria-label="第二十四图">
-          <figure class="plate medium"><img src="assets/photos/blur/DSC01080.webp" data-photo="DSC01080" alt="一位女子把团扇举在身前，身后的钟楼亮着灯"></figure>
-          <p class="folio"><i>2026.08.29 20:46</i><span>钟楼</span></p>
-        </article>
-
-        <!-- 36 -->
-        <article class="book-page art-page paper verso" aria-label="第二十五图">
-          <figure class="plate medium"><img src="assets/photos/blur/DSC01096.webp" data-photo="DSC01096" alt="一位穿靛蓝汉服的女子捧着一只藤编小球，钟楼在身后亮着"></figure>
+        <article class="book-page art-page paper recto" aria-label="钟楼 第二图">
+          <figure class="plate medium"><img src="assets/photos/blur/zhonglou/XiAn_20260829_205711.webp" data-photo="zhonglou/XiAn_20260829_205711" alt="靛蓝汉服女子怀抱编织小球，钟楼在身后亮起"></figure>
           <p class="folio"><i>2026.08.29 20:57</i><span>钟楼</span></p>
         </article>
-
-        <!-- 37 -->
-        <article class="book-page art-page paper recto" aria-label="第二十六图">
-          <figure class="plate medium"><img src="assets/photos/blur/DSC01111.webp" data-photo="DSC01111" alt="两位女子并排站在亮着灯的钟楼前"></figure>
-          <p class="folio"><i>2026.08.29 21:27</i><span>钟楼</span></p>
+        <article class="book-page art-page paper verso" aria-label="钟楼 第三图 左半">
+          <figure class="plate spread spread-left"><img src="assets/photos/blur/zhonglou/XiAn_20260829_212910.webp" data-photo="zhonglou/XiAn_20260829_212910" alt="两位女子在金色钟楼前自拍"></figure>
+          <p class="folio over"><i>2026.08.29 21:29</i><span>钟楼</span></p>
         </article>
-
-        <!-- 38 -->
-        <article class="book-page art-page paper verso" aria-label="第二十七图">
-          <figure class="plate medium"><img src="assets/photos/blur/DSC01120.webp" data-photo="DSC01120" alt="两位女子举着手机自拍，身后的钟楼通体金黄"></figure>
-          <p class="folio"><i>2026.08.29 21:29</i><span>钟楼</span></p>
+        <article class="book-page art-page paper recto" aria-label="钟楼 第三图 右半">
+          <figure class="plate spread spread-right"><img src="assets/photos/blur/zhonglou/XiAn_20260829_212910.webp" data-photo="zhonglou/XiAn_20260829_212910" alt="" aria-hidden="true"></figure>
         </article>
-
-        <!-- 39 -->
-        <article class="book-page art-page paper recto" aria-label="第二十八图">
-          <figure class="plate medium"><img src="assets/photos/blur/DSC01138.webp" data-photo="DSC01138" alt="一位女子用双手掩住嘴，笑弯了眼睛"></figure>
-          <p class="folio"><i>2026.08.29 21:57</i><span>钟楼</span></p>
-        </article>
-
-        <!-- 40 -->
-        <article class="book-page art-page paper verso" aria-label="第二十九图">
-          <figure class="plate large"><img src="assets/photos/blur/DSC01143.webp" data-photo="DSC01143" alt="前景是一位女子的背影，虚焦，远处另一位女子正对镜头"></figure>
-          <p class="folio"><i>2026.08.29 22:00</i><span>钟楼</span></p>
-        </article>
-
-        <!-- 41 -->
-        <article class="book-page art-page paper recto" aria-label="第三十图">
-          <figure class="plate medium"><img src="assets/photos/blur/DSC01148.webp" data-photo="DSC01148" alt="一位女子把双拳贴在脸颊两侧，站在亮灯的钟楼前"></figure>
+        <article class="book-page art-page paper verso" aria-label="钟楼 第四图">
+          <figure class="plate medium"><img src="assets/photos/blur/zhonglou/XiAn_20260829_220313.webp" data-photo="zhonglou/XiAn_20260829_220313" alt="靛蓝汉服女子把双拳贴在脸颊两侧，对镜头微笑"></figure>
           <p class="folio"><i>2026.08.29 22:03</i><span>钟楼</span></p>
         </article>
-
-        <!-- 42 至 43 跨页：背对钟楼 -->
-        <article class="book-page art-page paper verso" aria-label="第三十一图 左半">
-          <figure class="plate spread spread-left"><img src="assets/photos/blur/DSC01150.webp" data-photo="DSC01150" alt="两位女子背对镜头并肩站着，面前是通体金黄的钟楼"></figure>
-          <p class="folio over"><i>2026.08.29 22:06</i><span>钟楼</span></p>
-        </article>
-        <article class="book-page art-page paper recto" aria-label="第三十一图 右半">
-          <figure class="plate spread spread-right"><img src="assets/photos/blur/DSC01150.webp" data-photo="DSC01150" alt="" aria-hidden="true"></figure>
-        </article>
-
-        <!-- 44 -->
-        <article class="book-page art-page paper verso" aria-label="第三十二图">
-          <figure class="plate portrait"><img src="assets/photos/blur/DSC01154.webp" data-photo="DSC01154" width="1350" height="2400" alt="两位女子并排站在钟楼前，整座楼在她们身后"></figure>
+        <article class="book-page art-page paper recto" aria-label="钟楼 第五图">
+          <figure class="plate portrait"><img src="assets/photos/blur/zhonglou/XiAn_20260829_220748.webp" data-photo="zhonglou/XiAn_20260829_220748" width="3376" height="6000" alt="两位女子并肩站在金色的钟楼前"></figure>
           <p class="folio"><i>2026.08.29 22:07</i><span>钟楼</span></p>
         </article>
-
-        <!-- 45 后环衬 -->
-        <article class="book-page art-page endpaper recto" aria-label="后环衬"></article>
-
-        <!-- 46 封底 -->
-        <article class="book-page art-page cloth verso" data-density="hard" aria-label="封底">
-          <span class="back-mark">长安一日</span>
-          <span class="back-rule"></span>
+        <article class="book-page art-page paper verso" aria-label="钟楼 第六图">
+          <figure class="plate large"><img src="assets/photos/blur/zhonglou/XiAn_20260829_221006.webp" data-photo="zhonglou/XiAn_20260829_221006" alt="两位女子在灯火斑斓的夜景前一起比心"></figure>
+          <p class="folio"><i>2026.08.29 22:10</i><span>钟楼</span></p>
         </article>
 
+        <article class="book-page art-page endpaper recto" aria-label="后环衬"></article>
+        <article class="book-page art-page cloth verso" data-density="hard" aria-label="封底">
+          <div class="cover-surface" aria-hidden="true"><div class="cover-material"><span class="binding-groove"></span></div></div>
+          <div class="cover-composition">
+            <span class="back-mark">长安一日</span>
+            <span class="back-rule"></span>
+          </div>
+        </article>
       </div>
     </div>
   </section>
@@ -306,7 +204,9 @@
     </button>
     <div class="status" aria-live="polite">
       <span id="page-status">封面</span>
-      <small id="book-help">拖动页面，或使用方向键翻页</small>
+      <input id="page-seek" type="range" min="0" max="35" value="0" step="1" aria-label="翻到指定页">
+      <span id="chapter-status">长安一日</span>
+      <small id="book-help" class="sr-only">拖动页面，或使用方向键翻页</small>
     </div>
     <button id="next" type="button" aria-label="下一页">
       <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="m7.5 4.5 5 5-5 5" /></svg>

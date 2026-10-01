@@ -4,6 +4,9 @@ const previousButton = document.querySelector("#previous");
 const nextButton = document.querySelector("#next");
 const pageStatus = document.querySelector("#page-status");
 const orientationStatus = document.querySelector("#orientation");
+const pageSeek = document.querySelector("#page-seek");
+const chapterStatus = document.querySelector("#chapter-status");
+const chapterLinks = [...(document.querySelectorAll?.("[data-chapter]") ?? [])];
 const pageWidth = Number(bookElement.dataset.pageWidth) || 512;
 const pageHeight = Number(bookElement.dataset.pageHeight) || 640;
 
@@ -20,13 +23,14 @@ const pageFlip = new St.PageFlip(bookElement, {
   size: "stretch",
   minWidth: Math.max(1, Math.round(pageWidth * 0.56)),
   maxWidth: leafMax,
-  minHeight: Math.max(1, Math.round(pageHeight * 0.56)),
+  minHeight: 1,
   maxHeight: Math.round((leafMax * pageHeight) / pageWidth),
   drawShadow: false,
   flippingTime: prefersReducedMotion ? 1 : 760,
   usePortrait: true,
   startZIndex: 10,
-  autoSize: true,
+  // CSS owns the stage height, including short landscape viewports.
+  autoSize: false,
   maxShadowOpacity: 0.42,
   showCover: true,
   mobileScrollSupport: false,
@@ -39,12 +43,11 @@ const pageFlip = new St.PageFlip(bookElement, {
 
 let currentPage = 0;
 let isTurning = false;
-let openingCover = false;
 
 /* ---- 照片按需加载 -------------------------------------------------
    页面里先放 5KB 的模糊占位图，整本首屏不到 10KB 就能翻。
    真图只加载"当前页 + 前后各 2 页"，翻到哪补到哪。
-   窄屏取 1200px 版本，宽屏取 1800px 版本。
+   窄屏取 1200px 版本，宽屏取 2400px 版本。
    跨页的左右两半是同一张照片的两个 img，浏览器只会下载一次；
    但两处都得各自换 src，所以这里按元素记，不按照片编号记。 */
 const smallScreen =
@@ -94,10 +97,29 @@ function upgradeAround(page) {
 function updateControls() {
   const pageCount = pageFlip.getPageCount();
   const lastPage = pageCount - 1;
-  bookElement.dataset.edge = openingCover ? "inside" : currentPage === 0 ? "front" : currentPage === lastPage ? "back" : "inside";
+  bookElement.dataset.edge = isTurning && (currentPage === 0 || currentPage === lastPage) ? "inside" : currentPage === 0 ? "front" : currentPage === lastPage ? "back" : "inside";
 
   previousButton.disabled = currentPage === 0 || isTurning;
   nextButton.disabled = currentPage === lastPage || isTurning;
+  if (pageSeek) {
+    pageSeek.max = lastPage;
+    pageSeek.value = currentPage;
+    pageSeek.disabled = isTurning;
+    pageSeek.setAttribute?.("aria-valuetext", `第 ${currentPage + 1} 页，共 ${pageCount} 页`);
+    pageSeek.style?.setProperty("--read-progress", `${currentPage / lastPage * 100}%`);
+  }
+  const progress = currentPage / lastPage;
+  const stackProgress = Math.max(0, Math.min(1, (currentPage - 1) / Math.max(1, lastPage - 3)));
+  bookElement.style?.setProperty("--left-stack", `${Math.round(4 + stackProgress * 10)}px`);
+  bookElement.style?.setProperty("--right-stack", `${Math.round(14 - stackProgress * 10)}px`);
+  // Chapter and page counter share the current left page as their anchor.
+  const activeChapter = chapterLinks.filter((link) => Number(link.dataset.chapter) <= currentPage).at(-1);
+  for (const link of chapterLinks) {
+    if (link === activeChapter) link.setAttribute("aria-current", "location");
+    else link.removeAttribute("aria-current");
+    link.setAttribute("aria-disabled", String(isTurning));
+  }
+  if (chapterStatus) chapterStatus.textContent = activeChapter?.textContent.trim().slice(1) || "长安一日";
 
   if (currentPage === 0) {
     pageStatus.textContent = "封面";
@@ -116,7 +138,7 @@ pageFlip.on("flip", (event) => {
 
 pageFlip.on("changeState", (event) => {
   isTurning = event.data !== "read";
-  openingCover = event.data === "flipping" && currentPage === 0;
+  bookElement.dataset.turning = String(isTurning);
   updateControls();
 });
 
@@ -128,23 +150,87 @@ smallScreen.addEventListener("change", () => {
 function updateOrientation(orientation) {
   bookElement.dataset.layout = orientation;
   orientationStatus.textContent = orientation === "portrait" ? "单页" : "对开";
+  updateControls();
+  upgradeAround(currentPage);
 }
 
 pageFlip.on("init", (event) => updateOrientation(event.data.mode));
 pageFlip.on("changeOrientation", (event) => updateOrientation(event.data));
 
+for (const page of pages) {
+  page.insertAdjacentHTML?.("afterbegin", '<span class="leaf-edge" aria-hidden="true"></span><span class="leaf-bottom" aria-hidden="true"></span>');
+}
 pageFlip.loadFromHTML(pages);
+
+// Draw the final hard-cover pose as its resting spread before the read event.
+const render = pageFlip.getRender?.();
+if (render) {
+  const drawFrame = render.drawFrame.bind(render);
+  render.drawFrame = () => {
+    const calculation = pageFlip.getFlipController().getCalculation();
+    // The engine can stop less than one pixel short of the geometric endpoint.
+    if ((render.flippingPage?.getDrawingDensity() === "hard" ||
+         render.bottomPage?.getDrawingDensity() === "hard" ||
+         render.leftPage?.getDensity() === "hard" ||
+         render.rightPage?.getDensity() === "hard") &&
+        calculation &&
+        (100 - calculation.getFlippingProgress()) * render.getRect().pageWidth / 50 <= 1) {
+      const collection = pageFlip.getPageCollection();
+      const spreadIndex = collection.getCurrentSpreadIndex() +
+        (calculation.getDirection() === 0 ? 1 : -1);
+      const spread = collection.getSpread()[spreadIndex];
+      if (spread) {
+        const visible = new Set(spread);
+        collection.getPages().forEach((page, index) => {
+          if (!visible.has(index)) page.getElement().style.display = "none";
+          page.hideTemporaryCopy();
+        });
+        spread.forEach((index, position) => {
+          const page = collection.getPage(index);
+          const side = spread.length === 1 ?
+            (render.getOrientation() === "landscape" && index === pages.length - 1 ? 0 : 1) : position;
+          page.setOrientation(side);
+          page.simpleDraw(side);
+        });
+        return;
+      }
+    }
+    drawFrame();
+  };
+}
 updateControls();
 
 const requestedPage = Number(new URLSearchParams(location.search).get("page"));
 if (Number.isInteger(requestedPage) && requestedPage >= 0 && requestedPage < pages.length) {
-  pageFlip.turnToPage(requestedPage);
-  currentPage = requestedPage;
-  updateControls();
+  jumpToPage(requestedPage);
 }
 
 // 首屏：封面和开头两页立刻升级，其余等翻到再说
 upgradeAround(currentPage);
+
+function jumpToPage(page) {
+  if (isTurning) return;
+  pageFlip.turnToPage(page);
+  currentPage = pageFlip.getCurrentPageIndex?.() ?? page;
+  updateControls();
+  upgradeAround(currentPage);
+}
+
+for (const link of chapterLinks) {
+  link.addEventListener("click", (event) => {
+    event.preventDefault();
+    jumpToPage(Number(link.dataset.chapter));
+  });
+}
+pageSeek?.addEventListener("input", () => jumpToPage(Number(pageSeek.value)));
+pageSeek?.addEventListener("keydown", (event) => {
+  const direction = event.key === "ArrowRight" || event.key === "ArrowUp" ? 1 :
+    event.key === "ArrowLeft" || event.key === "ArrowDown" ? -1 : 0;
+  if (!direction) return;
+  event.preventDefault();
+  const step = bookElement.dataset.layout === "landscape" ? 2 : 1;
+  jumpToPage(Math.max(0, Math.min(pages.length - 1, currentPage + direction * step)));
+});
 
 previousButton.addEventListener("click", () => {
   if (!isTurning) pageFlip.flipPrev("bottom");
