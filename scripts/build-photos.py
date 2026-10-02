@@ -36,7 +36,6 @@ def save_webp(image: Image.Image, path: Path, longest: int, quality: int) -> Non
     resized = image.copy()
     resized.thumbnail((longest, longest), Image.Resampling.LANCZOS)
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.unlink(missing_ok=True)
     resized.save(path, "WEBP", quality=quality, method=6)
 
 
@@ -64,7 +63,6 @@ def main() -> None:
         destination = args.output / group
         save_webp(image, destination / f"{stem}.webp", 2400, 88)
         save_webp(image, destination / f"{stem}@m.webp", 1200, 86)
-        save_webp(image, args.output / "blur" / group / f"{stem}.webp", 36, 50)
         print(f"{group}/{stem}: {image.width}x{image.height}")
 
 

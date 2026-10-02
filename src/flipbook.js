@@ -46,7 +46,7 @@ let isTurning = false;
 
 /* ---- 照片按需加载 -------------------------------------------------
    图片区域先显示加载图标，不请求模糊占位图。
-   真图只加载"当前页 + 前后各 2 页"，翻到哪补到哪。
+   真图只加载"当前页 + 前 2 页和后 3 页"，翻到哪补到哪。
    封面固定取 1200px 版本；内页窄屏取 1200px，宽屏取 2400px。
    跨页的左右两半是同一张照片的两个 img，浏览器只会下载一次；
    但两处都得各自换 src，所以这里按元素记，不按照片编号记。 */
@@ -216,12 +216,10 @@ if (pageQuery !== null) {
 // 首屏：封面和开头两页立刻升级，其余等翻到再说
 upgradeAround(currentPage);
 
+// turnToPage 会同步触发 flip 事件，currentPage 和控件都由那一条路径更新。
 function jumpToPage(page) {
   if (isTurning) return;
   pageFlip.turnToPage(page);
-  currentPage = pageFlip.getCurrentPageIndex?.() ?? page;
-  updateControls();
-  upgradeAround(currentPage);
 }
 
 for (const link of chapterLinks) {

@@ -6,7 +6,7 @@
    纸色为中性冷白，刻意避开相册惯用的米黄。
    ============================================================= */
 
-@font-face{font-family:"Album Kai";src:url("fonts/FangZhengKaiSimplified.ttf?v=9723d0a") format("truetype");font-weight:400;font-style:normal;font-display:block}
+@font-face{font-family:"Album Kai";src:url("fonts/FangZhengKaiSimplified.woff2?v=9723d0a") format("woff2"),url("fonts/FangZhengKaiSimplified.ttf?v=9723d0a") format("truetype");font-weight:400;font-style:normal;font-display:swap}
 @font-face{font-family:"Qwitcher Grypen";src:url("fonts/QwitcherGrypen-signature.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
 
 :root{
@@ -260,7 +260,7 @@
   position:absolute;left:17%;bottom:27%;width:28%;height:2px;margin:0;display:flex;
   background:var(--thread);
 }
-.art-page .chapter-rule b{display:block;height:100%}
+.art-page .chapter-rule b{display:block;height:100%;flex:1}
 .art-page .chapter-rule b.zq{background:var(--zq)}
 .art-page .chapter-rule b.cq{background:var(--cq)}
 

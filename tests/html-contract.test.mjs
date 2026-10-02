@@ -18,7 +18,7 @@ test("template is vanilla HTML", () => {
   assert.match(index, /data-page-width="\d+"/);
   assert.match(index, /data-page-height="\d+"/);
   assert.match(index, /vendor\/page-flip\.browser\.js/);
-  assert.match(index, /preload.*FangZhengKaiSimplified\.ttf/);
+  assert.match(index, /preload.*FangZhengKaiSimplified\.woff2/);
   assert.match(script, /new St\.PageFlip/);
   assert.match(script, /loadFromHTML\(pages\)/);
   assert.match(script, /bookElement\.dataset\.pageWidth/);
@@ -26,6 +26,8 @@ test("template is vanilla HTML", () => {
   assert.doesNotMatch(index, /src="assets\/photos\/blur\//);
   assert.match(bookStyles, /photo-loading-spin/);
   assert.match(bookStyles, /FangZhengKaiSimplified\.ttf/);
+  assert.match(bookStyles, /FangZhengKaiSimplified\.woff2/);
+  assert.match(bookStyles, /font-display:swap/);
   assert.match(bookStyles, /方正楷体简体/);
   assert.match(bookStyles, /--book-sans:var\(--book-serif\)/);
   assert.doesNotMatch(bookStyles, /Source Serif|Cover Kai|FandolKai/);
@@ -54,9 +56,10 @@ test("vendored runtime and photo directory exist", async () => {
   assert.equal((await stat(new URL("vendor/page-flip.browser.js", root))).isFile(), true);
   assert.equal((await stat(new URL("assets/photos/", root))).isDirectory(), true);
   assert.equal((await stat(new URL("styles/fonts/FangZhengKaiSimplified.ttf", root))).isFile(), true);
+  assert.equal((await stat(new URL("styles/fonts/FangZhengKaiSimplified.woff2", root))).isFile(), true);
 });
 
-test("every selected photo has desktop, mobile and placeholder files", async () => {
+test("every selected photo has desktop and mobile files", async () => {
   const photoIds = [...index.matchAll(/data-photo="([^"]+)"/g)].map(([, id]) => id);
   const unique = new Set(photoIds);
   assert.equal(unique.size, 23);
@@ -66,7 +69,6 @@ test("every selected photo has desktop, mobile and placeholder files", async () 
     for (const path of [
       `assets/photos/${id}.webp`,
       `assets/photos/${id}@m.webp`,
-      `assets/photos/blur/${id}.webp`,
     ]) {
       assert.equal((await stat(new URL(path, root))).isFile(), true, path);
     }
