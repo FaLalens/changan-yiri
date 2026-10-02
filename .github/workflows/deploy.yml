@@ -12,7 +12,8 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: true
+  # 部署中途取消会把站点留在损坏状态
+  cancel-in-progress: false
 
 jobs:
   build:

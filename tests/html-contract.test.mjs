@@ -12,12 +12,57 @@ const pages = [...index.matchAll(/<article\b[^>]*class="[^"]*\bbook-page\b[^"]*"
   ([tag]) => tag,
 );
 
+/* flipbook.js 直接用 DOM、不做存在性兜底，所以 mock 必须把它用到的成员备齐：
+   少一个就会在那里抛错，测试也就测不到后面那半截。 */
+const element = (extra) => ({
+  dataset: {}, textContent: "", disabled: false, value: "", max: "",
+  attributes: new Map(), listeners: {},
+  style: { vars: {}, setProperty(name, value) { this.vars[name] = value; } },
+  classList: { add() {}, remove() {} },
+  setAttribute(name, value) { this.attributes.set(name, value); },
+  removeAttribute(name) { this.attributes.delete(name); },
+  addEventListener(name, handler) { this.listeners[name] = handler; },
+  querySelectorAll: () => [],
+  insertAdjacentHTML() {},
+  closest: () => null,
+  ...extra,
+});
+
+const bookOf = (leaves, dataset) => element({
+  dataset: { pageWidth: "480", pageHeight: "640", ...dataset },
+  querySelectorAll: () => leaves,
+});
+
+// 返回的 document 上挂着 controls，方便断言某个控件的具体状态
+const documentOf = (bookEl, chapters = []) => {
+  const controls = new Map();
+  return {
+    documentElement: { style: { setProperty() {} } },
+    querySelector: (selector) => {
+      if (selector === "#book") return bookEl;
+      if (!controls.has(selector)) controls.set(selector, element());
+      return controls.get(selector);
+    },
+    querySelectorAll: (selector) => (selector === "[data-chapter]" ? chapters : []),
+    controls,
+  };
+};
+
+const windowOf = (media, extra) => ({
+  matchMedia: () => media ?? { matches: false, addEventListener() {} },
+  addEventListener() {},
+  ...extra,
+});
+
 test("template is vanilla HTML", () => {
   assert.doesNotMatch(`${index}\n${script}\n${styles}`, /react|jsx|vite/i);
   assert.match(index, /id="book"/);
   assert.match(index, /data-page-width="\d+"/);
   assert.match(index, /data-page-height="\d+"/);
   assert.match(index, /vendor\/page-flip\.browser\.js/);
+  // .art-page 与 .book-page 特异度相同，overflow/background 由后来者胜出，故 book.css 必须在前
+  assert.ok(index.indexOf('href="styles/book.css"') < index.indexOf('href="styles/site.css"'),
+    "book.css must be linked before site.css");
   assert.doesNotMatch(index, /rel="preload"/);
   assert.match(script, /new St\.PageFlip/);
   assert.match(script, /loadFromHTML\(pages\)/);
@@ -29,7 +74,6 @@ test("template is vanilla HTML", () => {
   assert.match(bookStyles, /album-kai\.woff2/);
   assert.match(bookStyles, /font-display:swap/);
   assert.match(bookStyles, /方正楷体简体/);
-  assert.match(bookStyles, /--book-sans:var\(--book-serif\)/);
   assert.doesNotMatch(bookStyles, /Source Serif|Cover Kai|FandolKai/);
   assert.match(styles, /\.book-page\.\--left::before/);
   assert.match(styles, /\.book-page\.\--right::before/);
@@ -91,31 +135,26 @@ test("spread halves face each other across the gutter", () => {
 test("cover keeps the mobile photo while inner pages follow viewport changes", () => {
   const requests = [];
   const media = { matches: true, addEventListener(name, handler) { this.change = handler; } };
-  const frame = { classList: { add() {}, remove() {} } };
+  const frame = element();
   const photo = (stem, isCover) => ({
     dataset: { photo: stem },
     closest: (selector) => selector === ".cover-plate" ? (isCover ? frame : null) : frame,
   });
   const cover = photo("zhonglou/XiAn_20260829_210250", true);
   const inner = photo("defuxiang/XiAn_20260829_144100", false);
-  const book = {
-    dataset: { pageWidth: "480", pageHeight: "640" },
-    querySelectorAll: () => [cover, inner].map(img => ({ querySelectorAll: () => [img] })),
-  };
+  const leaves = [cover, inner].map(img => element({ querySelectorAll: () => [img] }));
   class PageFlip {
     on() {} loadFromHTML() {}
     getPageCount() { return 2; }
+    getRender() { return null; }
   }
   class Image {
     set src(url) { requests.push(url); this.onload(); }
   }
   runInNewContext(script, {
-    document: {
-      documentElement: { style: { setProperty() {} } },
-      querySelector: selector => selector === "#book" ? book : { addEventListener() {} },
-    },
+    document: documentOf(bookOf(leaves)),
     St: { PageFlip }, Image, location: { search: "" }, URLSearchParams,
-    window: { matchMedia: () => media, addEventListener() {} },
+    window: windowOf(media),
   });
   assert.equal(cover.src, `assets/photos/${cover.dataset.photo}@m.webp`);
   assert.equal(inner.src, `assets/photos/${inner.dataset.photo}@m.webp`);
@@ -134,23 +173,19 @@ test("cover keeps the mobile photo while inner pages follow viewport changes", (
 test("focused controls keep their native keyboard actions", () => {
   const actions = [];
   const handlers = {};
-  const book = { dataset: { pageWidth: "512", pageHeight: "640" }, querySelectorAll: () => Array(8).fill({}) };
-  const button = () => ({ addEventListener: () => {}, disabled: false });
-  const document = {
-    documentElement: { style: { setProperty: () => {} } },
-    querySelector: (selector) => selector === "#book" ? book : selector === "#page-status" || selector === "#orientation" ? { textContent: "" } : button(),
-  };
   class PageFlip {
     on() {}
     getPageCount() { return 8; }
     loadFromHTML() {}
+    getRender() { return null; }
     turnToPage(page) { actions.push(["turn", page]); }
     flipNext() { actions.push(["next"]); }
     flipPrev() { actions.push(["previous"]); }
   }
   runInNewContext(script, {
-    document, St: { PageFlip }, location: { search: "" }, URLSearchParams,
-    window: { addEventListener: (name, handler) => { handlers[name] = handler; } },
+    document: documentOf(bookOf(Array.from({ length: 8 }, () => element()), { pageWidth: "512" })),
+    St: { PageFlip }, location: { search: "" }, URLSearchParams,
+    window: windowOf(null, { addEventListener: (name, handler) => { handlers[name] = handler; } }),
   });
   assert.deepEqual(actions, [], "No page query leaves the book on its cover");
   actions.length = 0;
@@ -163,68 +198,44 @@ test("focused controls keep their native keyboard actions", () => {
 
 test("both covers recenter during a turn and restore position after cancellation", () => {
   const callbacks = {};
-  const book = {
-    dataset: { pageWidth: "480", pageHeight: "640", layout: "landscape" },
-    querySelectorAll: () => Array.from({ length: 36 }, () => ({ dataset: {} })),
-  };
-  const control = () => ({ addEventListener() {}, disabled: false });
+  const bookEl = bookOf(Array.from({ length: 36 }, () => element()), { layout: "landscape" });
   class PageFlip {
     on(name, callback) { callbacks[name] = callback; }
     getPageCount() { return 36; }
     loadFromHTML() {}
+    getRender() { return null; }
     turnToPage() {}
   }
   runInNewContext(script, {
-    document: {
-      documentElement: { style: { setProperty() {} } },
-      querySelector: (selector) => selector === "#book" ? book : control(),
-    },
+    document: documentOf(bookEl),
     St: { PageFlip }, location: { search: "" }, URLSearchParams,
-    window: { addEventListener() {} },
+    window: windowOf(),
   });
   for (const [page, edge] of [[0, "front"], [1, "inside"], [33, "inside"], [35, "back"], [15, "inside"]]) {
     callbacks.flip({ data: page });
     for (const state of ["flipping", "user_fold"]) {
       callbacks.changeState({ data: state });
-      assert.equal(book.dataset.edge, "inside");
+      assert.equal(bookEl.dataset.edge, "inside");
       callbacks.changeState({ data: "read" });
-      assert.equal(book.dataset.edge, edge);
+      assert.equal(bookEl.dataset.edge, edge);
     }
   }
 });
 
 test("chapter follows the current left page across layout changes", () => {
   const callbacks = {};
-  const controls = new Map();
-  const control = () => ({
-    attributes: new Map(), listeners: {}, textContent: "", style: { setProperty() {} },
-    addEventListener(name, handler) { this.listeners[name] = handler; },
-    setAttribute(name, value) { this.attributes.set(name, value); },
-    removeAttribute(name) { this.attributes.delete(name); },
-  });
-  const links = [[4, "壹德福巷"], [14, "贰唐苑"], [26, "叁钟楼"]].map(([page, name]) => ({
-    ...control(), dataset: { chapter: String(page) }, textContent: name,
-  }));
-  const book = {
-    dataset: { pageWidth: "480", pageHeight: "640" }, style: { setProperty() {} },
-    querySelectorAll: () => Array.from({ length: 36 }, () => ({ dataset: {} })),
-  };
+  const links = [[4, "壹德福巷"], [14, "贰唐苑"], [26, "叁钟楼"]].map(([page, name]) =>
+    element({ dataset: { chapter: String(page) }, textContent: name }));
+  const bookEl = bookOf(Array.from({ length: 36 }, () => element()));
+  const doc = documentOf(bookEl, links);
   class PageFlip {
     on(name, callback) { callbacks[name] = callback; }
     getPageCount() { return 36; }
-    loadFromHTML() {} turnToPage() {}
+    loadFromHTML() {} getRender() { return null; } turnToPage() {}
   }
   runInNewContext(script, {
-    document: {
-      documentElement: { style: { setProperty() {} } },
-      querySelectorAll: () => links,
-      querySelector: (selector) => {
-        if (selector === "#book") return book;
-        if (!controls.has(selector)) controls.set(selector, control());
-        return controls.get(selector);
-      },
-    },
-    St: { PageFlip }, location: { search: "" }, URLSearchParams, window: { addEventListener() {} },
+    document: doc,
+    St: { PageFlip }, location: { search: "" }, URLSearchParams, window: windowOf(),
   });
   callbacks.init({ data: { mode: "landscape" } });
   for (const [page, chapter] of [
@@ -234,16 +245,24 @@ test("chapter follows the current left page across layout changes", () => {
       // PageFlip emits flip before changeOrientation when rebuilding the spread.
       callbacks.flip({ data: page });
       callbacks.changeOrientation({ data: layout });
-      assert.equal(book.dataset.layout, layout);
-      assert.equal(Number(controls.get("#page-seek").value), page);
-      assert.equal(controls.get("#previous").disabled, page === 0);
-      assert.equal(controls.get("#next").disabled, page === 35);
-      assert.equal(controls.get("#page-seek").disabled, false);
+      assert.equal(bookEl.dataset.layout, layout);
+      assert.equal(Number(doc.controls.get("#page-seek").value), page);
+      assert.equal(doc.controls.get("#previous").disabled, page === 0);
+      assert.equal(doc.controls.get("#next").disabled, page === 35);
+      assert.equal(doc.controls.get("#page-seek").disabled, false);
       assert.deepEqual(links.filter(link => link.attributes.has("aria-current")).map(link => Number(link.dataset.chapter)), chapter === null ? [] : [chapter]);
-      assert.equal(controls.get("#chapter-status").textContent, chapter === null ? "长安一日" : links.find(link => Number(link.dataset.chapter) === chapter).textContent.slice(1));
-      assert.equal(controls.get("#page-status").textContent, page === 0 ? "封面" : page === 35 ? "封底" : `${String(page + 1).padStart(2, "0")} / 36`);
+      assert.equal(doc.controls.get("#chapter-status").textContent, chapter === null ? "长安一日" : links.find(link => Number(link.dataset.chapter) === chapter).textContent.slice(1));
+      assert.equal(doc.controls.get("#page-status").textContent, page === 0 ? "封面" : page === 35 ? "封底" : `${String(page + 1).padStart(2, "0")} / 36`);
+      assert.equal(doc.controls.get("#page-seek").attributes.get("aria-valuetext"), `第 ${page + 1} 页，共 36 页`);
     }
   }
+  // 书脊厚度和滑条进度：这几行以前被 ?. 静默跳过，测试根本没走到
+  callbacks.flip({ data: 0 });
+  assert.deepEqual([bookEl.style.vars["--left-stack"], bookEl.style.vars["--right-stack"],
+    doc.controls.get("#page-seek").style.vars["--read-progress"]], ["4px", "14px", "0%"]);
+  callbacks.flip({ data: 35 });
+  assert.deepEqual([bookEl.style.vars["--left-stack"], bookEl.style.vars["--right-stack"],
+    doc.controls.get("#page-seek").style.vars["--read-progress"]], ["14px", "4px", "100%"]);
 });
 
 test("hard-cover endpoints render only the destination leaves in the correct orientation", () => {
@@ -254,10 +273,10 @@ test("hard-cover endpoints render only the destination leaves in the correct ori
   let renderedWidth = 534;
   let ordinaryFrames = 0;
   const draws = [];
-  const leaves = Array.from({ length: 36 }, (_, index) => ({
-    dataset: {}, element: { style: {} }, hideTemporaryCopy() {},
-    getElement() { return this.element; }, setOrientation(side) { this.side = side; },
-    simpleDraw(side) { this.element.style.display = "block"; draws.push([index, side]); },
+  const leaves = Array.from({ length: 36 }, (_, index) => element({
+    node: { style: {} }, hideTemporaryCopy() {},
+    getElement() { return this.node; }, setOrientation(side) { this.side = side; },
+    simpleDraw(side) { this.node.style.display = "block"; draws.push([index, side]); },
   }));
   const landscape = [[0], ...Array.from({ length: 17 }, (_, i) => [i * 2 + 1, i * 2 + 2]), [35]];
   const portrait = leaves.map((_, i) => [i]);
@@ -282,13 +301,10 @@ test("hard-cover endpoints render only the destination leaves in the correct ori
       }) };
     }
   }
-  const book = { dataset: { pageWidth: "480", pageHeight: "640" }, querySelectorAll: () => leaves };
+  const bookEl = bookOf(leaves);
   runInNewContext(script, {
-    document: {
-      documentElement: { style: { setProperty() {} } },
-      querySelector: (selector) => selector === "#book" ? book : { addEventListener() {} },
-    },
-    St: { PageFlip }, location: { search: "" }, URLSearchParams, window: { addEventListener() {} },
+    document: documentOf(bookEl),
+    St: { PageFlip }, location: { search: "" }, URLSearchParams, window: windowOf(),
   });
   for (const [mode, from, turn, expected] of [
     ["landscape", 0, 0, [[1, 0], [2, 1]]], ["landscape", 1, 1, [[0, 1]]],
@@ -299,7 +315,7 @@ test("hard-cover endpoints render only the destination leaves in the correct ori
     orientation = mode; spreadIndex = from; direction = turn; draws.length = 0;
     render.drawFrame();
     assert.deepEqual(draws, expected);
-    assert.deepEqual(leaves.flatMap((page, index) => page.element.style.display === "block" ? [index] : []), expected.map(([index]) => index));
+    assert.deepEqual(leaves.flatMap((page, index) => page.node.style.display === "block" ? [index] : []), expected.map(([index]) => index));
   }
   progress = 50;
   render.drawFrame();

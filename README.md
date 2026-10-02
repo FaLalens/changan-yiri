@@ -54,6 +54,8 @@ python -m http.server 8000
    uv run --with fonttools --with brotli python scripts/make-font.py
    ```
 
+   脚本只收会渲染的字符（先剥代码注释），并在字体源缺字时打印警告：方正楷体简体没有 `〇`，该字在没有系统楷体的环境回退其他字体。
+
 3. 提交源码并推送到 `main`。GitHub Actions 自动构建、运行测试并部署 `public/`，完成后刷新相册链接。
 
    [查看部署状态](https://github.com/FaLalens/changan-yiri/actions) · [发布工作流](.github/workflows/deploy.yml)
@@ -102,7 +104,7 @@ python -m http.server 8000
 - 书脊使用浅凹槽，封面构图在凹槽右侧区域居中；封面和封底使用独立的深色包边。
 - 纸张侧面与底面共用尺寸，左右镜像，厚度随阅读进度变化；调整时需同时检查静止页和翻动页。
 - 跨页照片在图版内裁切。唐苑 19:02 的左右半幅使用一致的右对齐裁切，让书缝避开面部。
-- 本地 PageFlip 内核包含硬页垂直偏移、小数尺寸裁切和柔页边缘覆盖修正；`flipbook.js` 还统一了硬页开合终点的绘制姿态。升级内核时需保留或重新验证这些行为。
+- 本地 PageFlip 内核基于上游 2.0.7，含硬页垂直偏移、小数尺寸裁切、柔页边缘覆盖三处修正，逐条改动与升级步骤记在 [src/vendor/page-flip.browser.js](src/vendor/page-flip.browser.js) 文件头；`flipbook.js` 还统一了硬页开合终点的绘制姿态。
 
 </details>
 

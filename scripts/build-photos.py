@@ -13,6 +13,8 @@ from pathlib import Path
 from PIL import Image, ImageOps, features
 
 
+ROOT = Path(__file__).resolve().parents[1]
+
 SELECTION = {
     "defuxiang": (
         "01_20260829_德福巷",
@@ -42,7 +44,7 @@ def save_webp(image: Image.Image, path: Path, longest: int, quality: int) -> Non
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("source", type=Path, help="202608_XiAn source directory")
-    parser.add_argument("--output", type=Path, default=Path("src/assets/photos"))
+    parser.add_argument("--output", type=Path, default=ROOT / "src" / "assets" / "photos")
     args = parser.parse_args()
     if not features.check("webp"):
         parser.error("Pillow must be built with WebP support")

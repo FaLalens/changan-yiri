@@ -21,7 +21,6 @@
   --ink:#1e2130;
   --ink-soft:#686d80;
   --book-serif:"Album Kai","方正楷体简体","KaiTi","楷体","Noto Serif SC","Songti SC","SimSun",serif;
-  --book-sans:var(--book-serif);
 }
 
 /* ---- 页面底色 ---------------------------------------------------- */
@@ -113,7 +112,7 @@
   position:absolute;bottom:5.2%;left:8.5%;right:8.5%;margin:0;z-index:4;
   display:flex;justify-content:space-between;align-items:baseline;gap:1.4em;
   color:#5b6376;
-  font:400 2.15cqw/1.4 var(--book-sans);
+  font:400 2.15cqw/1.4 var(--book-serif);
   letter-spacing:.1em;
 }
 .art-page .folio i{font-style:normal;font-variant-numeric:tabular-nums}
@@ -254,7 +253,7 @@
 }
 .art-page .chapter-meta{
   position:absolute;left:17%;bottom:17%;margin:0;
-  font:400 2.5cqw/1.9 var(--book-sans);letter-spacing:0;color:var(--chapter-ink);
+  font:400 2.5cqw/1.9 var(--book-serif);letter-spacing:0;color:var(--chapter-ink);
 }
 .art-page .chapter-rule{
   position:absolute;left:17%;bottom:27%;width:28%;height:2px;margin:0;display:flex;
@@ -272,11 +271,11 @@
   letter-spacing:.03em;color:var(--zq);
 }
 .art-page .titleblock .sub{
-  margin:0 0 11cqw;font:400 2.5cqw/1.7 var(--book-sans);
+  margin:0 0 11cqw;font:400 2.5cqw/1.7 var(--book-serif);
   letter-spacing:.24em;color:var(--ink-soft);
 }
 .art-page .titleblock .meta{
-  margin:0;font:400 2.4cqw/2 var(--book-sans);
+  margin:0;font:400 2.4cqw/2 var(--book-serif);
   letter-spacing:.13em;color:var(--ink-soft);
 }
 
@@ -299,10 +298,8 @@
 /* ---- 版权页 ------------------------------------------------------ */
 .art-page .colophon{
   position:absolute;left:14%;right:16%;bottom:13.5%;margin:0;
-  font:400 2.15cqw/2.05 var(--book-sans);letter-spacing:.07em;color:var(--ink-soft);
+  font:400 2.15cqw/2.05 var(--book-serif);letter-spacing:.07em;color:var(--ink-soft);
 }
 .art-page .colophon p{margin:0 0 2.6cqw}
 .art-page .colophon p:last-child{margin-bottom:0}
 .art-page .colophon .small-print{font-size:1.9cqw;color:#656d80}
-
-.art-page :is(h2,p,span){letter-spacing:0}
