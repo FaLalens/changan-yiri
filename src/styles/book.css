@@ -6,6 +6,7 @@
    纸色为中性冷白，刻意避开相册惯用的米黄。
    ============================================================= */
 
+@font-face{font-family:"Album Kai";src:url("fonts/FangZhengKaiSimplified.ttf") format("truetype");font-weight:400;font-style:normal;font-display:block}
 @font-face{font-family:"Qwitcher Grypen";src:url("fonts/QwitcherGrypen-signature.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
 
 :root{
@@ -19,8 +20,8 @@
   --paper:#f2f2ef;
   --ink:#1e2130;
   --ink-soft:#686d80;
-  --book-serif:"方正楷体简体","KaiTi","楷体","Noto Serif SC","Songti SC","SimSun",serif;
-  --book-sans:"Helvetica Neue",Arial,"Microsoft YaHei","PingFang SC",sans-serif;
+  --book-serif:"Album Kai","方正楷体简体","KaiTi","楷体","Noto Serif SC","Songti SC","SimSun",serif;
+  --book-sans:var(--book-serif);
 }
 
 /* ---- 页面底色 ---------------------------------------------------- */

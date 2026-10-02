@@ -18,13 +18,16 @@ test("template is vanilla HTML", () => {
   assert.match(index, /data-page-width="\d+"/);
   assert.match(index, /data-page-height="\d+"/);
   assert.match(index, /vendor\/page-flip\.browser\.js/);
+  assert.match(index, /preload.*FangZhengKaiSimplified\.ttf/);
   assert.match(script, /new St\.PageFlip/);
   assert.match(script, /loadFromHTML\(pages\)/);
   assert.match(script, /bookElement\.dataset\.pageWidth/);
   assert.match(script, /bookElement\.dataset\.pageHeight/);
   assert.doesNotMatch(index, /src="assets\/photos\/blur\//);
   assert.match(bookStyles, /photo-loading-spin/);
+  assert.match(bookStyles, /FangZhengKaiSimplified\.ttf/);
   assert.match(bookStyles, /方正楷体简体/);
+  assert.match(bookStyles, /--book-sans:var\(--book-serif\)/);
   assert.doesNotMatch(bookStyles, /Source Serif|Cover Kai|FandolKai/);
   assert.match(styles, /\.book-page\.\--left::before/);
   assert.match(styles, /\.book-page\.\--right::before/);
@@ -50,6 +53,7 @@ test("default page size stays inside the UI envelope", () => {
 test("vendored runtime and photo directory exist", async () => {
   assert.equal((await stat(new URL("vendor/page-flip.browser.js", root))).isFile(), true);
   assert.equal((await stat(new URL("assets/photos/", root))).isDirectory(), true);
+  assert.equal((await stat(new URL("styles/fonts/FangZhengKaiSimplified.ttf", root))).isFile(), true);
 });
 
 test("every selected photo has desktop, mobile and placeholder files", async () => {

@@ -12,7 +12,13 @@
 
 ## 阅读
 
-本地可直接用浏览器打开 [src/index.html](src/index.html)，无需启动服务。相册使用原生 HTML、CSS、JavaScript 和本地 PageFlip 内核。
+相册使用原生 HTML、CSS、JavaScript 和本地 PageFlip 内核。为让浏览器加载项目内字体和照片资源，请从仓库根目录启动一个静态服务，再打开 `http://localhost:8000/src/`：
+
+```bash
+python -m http.server 8000
+```
+
+直接双击 [src/index.html](src/index.html) 也能查看页面，但部分浏览器会因 `file://` 安全限制阻止项目内字体加载。
 
 - 翻页：底部左右按钮、键盘 `←` / `→` / 空格，或拖动书页角。
 - 跳页：顶部地点导航、底部页码滑条；`Home` 回封面，`End` 到封底。
@@ -80,7 +86,7 @@
 
 配色来自当天服饰：靛蓝布面 `#354174`、藕紫点缀 `#8f7c9c`，搭配金线、蓝绿色发饰纹样和中性冷白纸面 `#f2f2ef`。
 
-封面以正楷题字、花窗裁切的钟楼双人照和细金边构成；章节页使用浅色纸面与局部印花。正文与封面题字使用系统安装的“方正楷体简体”，署名使用随站点提供的手写字体。
+封面以正楷题字、花窗裁切的钟楼双人照和细金边构成；章节页使用浅色纸面与局部印花。正文与封面题字优先使用随站点提供的 `FangZhengKaiSimplified.ttf`，系统安装的“方正楷体简体”作为回退；署名使用随站点提供的手写字体。
 
 <details>
 <summary>装帧与翻页维护要点</summary>
@@ -101,6 +107,7 @@
 | 资源 | 许可与说明 |
 | --- | --- |
 | PageFlip 翻页内核 | [MIT](src/vendor/PAGE-FLIP-LICENSE) |
+| 方正楷体简体正文与题字 | [FangZhengKaiSimplified.ttf](src/styles/fonts/FangZhengKaiSimplified.ttf) |
 | Qwitcher Grypen 署名与日期 | [SIL OFL 1.1](src/styles/fonts/QwitcherGrypen-OFL.txt) |
 
-系统字体不随站点打包；如果访问设备未安装“方正楷体简体”，浏览器会按 CSS 字体回退顺序选择可用楷体。
+浏览器优先加载项目内的方正楷体文件；如果加载失败，再按 CSS 字体回退顺序选择系统楷体。方正楷体文件由项目维护者提供，使用前请遵守字体授权条款。
