@@ -39,11 +39,11 @@ python -m http.server 8000
    | [src/styles/site.css](src/styles/site.css) | 表头、舞台、控件与响应式布局 |
    | [src/styles/book.css](src/styles/book.css) | 纸页、布面、照片与装帧 |
 
-2. 在仓库根目录运行检查与构建，需要 Node.js 和 Python 3：
+2. 在仓库根目录运行构建与检查（与 CI 一致），需要 Node.js 和 Python 3：
 
    ```bash
-   node --test tests/html-contract.test.mjs
    python scripts/build-site.py
+   node --test tests/html-contract.test.mjs
    ```
 
    构建会把 `src/` 完整复制到 `public/` 并生成 `.nojekyll`。可直接打开 `public/index.html` 检查发布版本。
