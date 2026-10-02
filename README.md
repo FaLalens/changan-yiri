@@ -12,13 +12,13 @@
 
 ## 阅读
 
-相册使用原生 HTML、CSS、JavaScript 和本地 PageFlip 内核。为让浏览器加载项目内字体和照片资源，请从仓库根目录启动一个静态服务，再打开 `http://localhost:8000/src/`：
+相册使用原生 HTML、CSS、JavaScript 和本地 PageFlip 内核。推荐从仓库根目录启动一个静态服务，再打开 `http://localhost:8000/src/`：
 
 ```bash
 python -m http.server 8000
 ```
 
-直接双击 [src/index.html](src/index.html) 也能查看页面，但部分浏览器会因 `file://` 安全限制阻止项目内字体加载。
+直接双击 [src/index.html](src/index.html) 也能查看页面：照片照常显示，楷体优先命中系统字体，个别浏览器在 `file://` 下可能不加载项目内的子集字体。
 
 - 翻页：底部左右按钮、键盘 `←` / `→` / 空格，或拖动书页角。
 - 跳页：顶部地点导航、底部页码滑条；`Home` 回封面，`End` 到封底。
@@ -47,6 +47,12 @@ python -m http.server 8000
    ```
 
    构建会把 `src/` 完整复制到 `public/` 并生成 `.nojekyll`。可直接打开 `public/index.html` 检查发布版本。
+
+   改动页面文字后还需重跑一次字体子集裁剪（需要 [uv](https://docs.astral.sh/uv/)）：
+
+   ```bash
+   uv run --with fonttools --with brotli python scripts/make-font.py
+   ```
 
 3. 提交源码并推送到 `main`。GitHub Actions 自动构建、运行测试并部署 `public/`，完成后刷新相册链接。
 
@@ -88,7 +94,7 @@ python -m http.server 8000
 
 配色来自当天服饰：靛蓝布面 `#354174`、藕紫点缀 `#8f7c9c`，搭配金线、蓝绿色发饰纹样和中性冷白纸面 `#f2f2ef`。
 
-封面以正楷题字、花窗裁切的钟楼双人照和细金边构成；章节页使用浅色纸面与局部印花。正文与封面题字优先使用随站点提供的 `FangZhengKaiSimplified.woff2`，需要时依次回退到项目内 TTF 与系统安装的“方正楷体简体”；署名使用随站点提供的手写字体。
+封面以正楷题字、花窗裁切的钟楼双人照和细金边构成；章节页使用浅色纸面与局部印花。正文与封面题字优先命中系统楷体（KaiTi / Kaiti SC / STKaiti），没有楷体的环境加载随站点提供的字符子集 `album-kai.woff2`，由 [scripts/make-font.py](scripts/make-font.py) 从方正楷体裁出，改动页面文字后需重跑；署名使用随站点提供的手写字体。
 
 <details>
 <summary>装帧与翻页维护要点</summary>
@@ -107,7 +113,7 @@ python -m http.server 8000
 | 资源 | 许可与说明 |
 | --- | --- |
 | PageFlip 翻页内核 | [MIT](src/vendor/PAGE-FLIP-LICENSE) |
-| 方正楷体简体正文与题字 | [FangZhengKaiSimplified.woff2](src/styles/fonts/FangZhengKaiSimplified.woff2) · [TTF 回退](src/styles/fonts/FangZhengKaiSimplified.ttf) |
+| 方正楷体简体正文与题字 | [album-kai.woff2](src/styles/fonts/album-kai.woff2)（字符子集）· 源文件 [FangZhengKaiSimplified.ttf](fonts/FangZhengKaiSimplified.ttf) |
 | Qwitcher Grypen 署名与日期 | [SIL OFL 1.1](src/styles/fonts/QwitcherGrypen-OFL.txt) |
 
 字体文件由项目维护者提供，使用前请遵守字体授权条款。
