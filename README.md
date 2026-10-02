@@ -52,6 +52,8 @@ python -m http.server 8000
 
    [查看部署状态](https://github.com/FaLalens/changan-yiri/actions) · [发布工作流](.github/workflows/deploy.yml)
 
+[tests/html-contract.test.mjs](tests/html-contract.test.mjs) 检查页面与资源结构、封面图片规格、导航键盘行为、章节状态和硬页终点绘制。涉及布局或翻页动画的修改还需在浏览器中检查单页、对开和开合过程。
+
 ### 重建照片
 
 照片存放在 `src/assets/photos/` 下的 `defuxiang/`、`tangyuan/`、`zhonglou/` 三个目录。HTML 用 `data-photo="章节目录/照片名"` 引用，不包含扩展名。
@@ -86,7 +88,7 @@ python -m http.server 8000
 
 配色来自当天服饰：靛蓝布面 `#354174`、藕紫点缀 `#8f7c9c`，搭配金线、蓝绿色发饰纹样和中性冷白纸面 `#f2f2ef`。
 
-封面以正楷题字、花窗裁切的钟楼双人照和细金边构成；章节页使用浅色纸面与局部印花。正文与封面题字优先使用随站点提供的 `FangZhengKaiSimplified.ttf`，系统安装的“方正楷体简体”作为回退；署名使用随站点提供的手写字体。
+封面以正楷题字、花窗裁切的钟楼双人照和细金边构成；章节页使用浅色纸面与局部印花。正文与封面题字优先使用随站点提供的 `FangZhengKaiSimplified.woff2`，需要时依次回退到项目内 TTF 与系统安装的“方正楷体简体”；署名使用随站点提供的手写字体。
 
 <details>
 <summary>装帧与翻页维护要点</summary>
@@ -98,8 +100,6 @@ python -m http.server 8000
 
 </details>
 
-[tests/html-contract.test.mjs](tests/html-contract.test.mjs) 检查页面与资源结构、封面图片规格、导航键盘行为、章节状态和硬页终点绘制。涉及布局或翻页动画的修改还需在浏览器中检查单页、对开和开合过程。
-
 ## 版权与字体
 
 照片版权归拍摄者与出镜者所有，未经许可请勿转载或另作他用。
@@ -107,7 +107,7 @@ python -m http.server 8000
 | 资源 | 许可与说明 |
 | --- | --- |
 | PageFlip 翻页内核 | [MIT](src/vendor/PAGE-FLIP-LICENSE) |
-| 方正楷体简体正文与题字 | [FangZhengKaiSimplified.ttf](src/styles/fonts/FangZhengKaiSimplified.ttf) |
+| 方正楷体简体正文与题字 | [FangZhengKaiSimplified.woff2](src/styles/fonts/FangZhengKaiSimplified.woff2) · [TTF 回退](src/styles/fonts/FangZhengKaiSimplified.ttf) |
 | Qwitcher Grypen 署名与日期 | [SIL OFL 1.1](src/styles/fonts/QwitcherGrypen-OFL.txt) |
 
-浏览器优先加载项目内的方正楷体文件；如果加载失败，再按 CSS 字体回退顺序选择系统楷体。方正楷体文件由项目维护者提供，使用前请遵守字体授权条款。
+字体文件由项目维护者提供，使用前请遵守字体授权条款。
