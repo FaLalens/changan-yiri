@@ -24,6 +24,8 @@ test("template is vanilla HTML", () => {
   assert.match(script, /bookElement\.dataset\.pageHeight/);
   assert.doesNotMatch(index, /src="assets\/photos\/blur\//);
   assert.match(bookStyles, /photo-loading-spin/);
+  assert.match(bookStyles, /方正楷体简体/);
+  assert.doesNotMatch(bookStyles, /Source Serif|Cover Kai|FandolKai/);
   assert.match(styles, /\.book-page\.\--left::before/);
   assert.match(styles, /\.book-page\.\--right::before/);
   assert.match(styles, /z-index:\s*3/);

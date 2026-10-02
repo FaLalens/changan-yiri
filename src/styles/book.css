@@ -6,9 +6,6 @@
    纸色为中性冷白，刻意避开相册惯用的米黄。
    ============================================================= */
 
-@font-face{font-family:"Source Serif 4";src:url("fonts/SourceSerif4-Regular.otf.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
-@font-face{font-family:"Source Serif 4";src:url("fonts/SourceSerif4-It.otf.woff2") format("woff2");font-weight:400;font-style:italic;font-display:swap}
-@font-face{font-family:"Cover Kai";src:url("fonts/FandolKai-title.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
 @font-face{font-family:"Qwitcher Grypen";src:url("fonts/QwitcherGrypen-signature.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
 
 :root{
@@ -22,7 +19,7 @@
   --paper:#f2f2ef;
   --ink:#1e2130;
   --ink-soft:#686d80;
-  --book-serif:"Source Serif 4","Noto Serif SC","Songti SC","SimSun",Georgia,serif;
+  --book-serif:"方正楷体简体","KaiTi","楷体","Noto Serif SC","Songti SC","SimSun",serif;
   --book-sans:"Helvetica Neue",Arial,"Microsoft YaHei","PingFang SC",sans-serif;
 }
 
@@ -217,7 +214,7 @@
 .art-page .cover-title{
   position:absolute;left:18%;top:14%;margin:0;
   writing-mode:vertical-rl;
-  font:400 13cqw/1.12 "Cover Kai","KaiTi",serif;
+  font:400 13cqw/1.12 var(--book-serif);
   letter-spacing:0;
   text-shadow:1px 2px 2px rgb(9 12 28 / 40%);
 }
@@ -286,7 +283,7 @@
 .art-page .back-mark{
   position:absolute;left:0;right:0;bottom:15%;margin:0;
   text-align:center;
-  font:400 4.6cqw/1.2 "Cover Kai","KaiTi",serif;letter-spacing:0;color:#c8ccdf;
+  font:400 4.6cqw/1.2 var(--book-serif);letter-spacing:0;color:#c8ccdf;
 }
 .art-page .back-rule{
   position:absolute;left:50%;bottom:22%;width:16%;height:2px;translate:-50% 0;

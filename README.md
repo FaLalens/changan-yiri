@@ -80,7 +80,7 @@
 
 配色来自当天服饰：靛蓝布面 `#354174`、藕紫点缀 `#8f7c9c`，搭配金线、蓝绿色发饰纹样和中性冷白纸面 `#f2f2ef`。
 
-封面以正楷题字、花窗裁切的钟楼双人照和细金边构成；章节页使用浅色纸面与局部印花。字体、纹理和翻页内核均随站点提供，无需请求远程字体。
+封面以正楷题字、花窗裁切的钟楼双人照和细金边构成；章节页使用浅色纸面与局部印花。正文与封面题字使用系统安装的“方正楷体简体”，署名使用随站点提供的手写字体。
 
 <details>
 <summary>装帧与翻页维护要点</summary>
@@ -101,8 +101,6 @@
 | 资源 | 许可与说明 |
 | --- | --- |
 | PageFlip 翻页内核 | [MIT](src/vendor/PAGE-FLIP-LICENSE) |
-| Source Serif 4 正文字体 | [SIL OFL](src/styles/fonts/LICENSE.md) |
-| 方朵楷体封面题字 | [GPLv3，含字体例外条款](src/styles/fonts/Fandol-COPYING.txt) |
 | Qwitcher Grypen 署名与日期 | [SIL OFL 1.1](src/styles/fonts/QwitcherGrypen-OFL.txt) |
 
-字体子集来源与生成方式见 [CALLIGRAPHY-SOURCES.md](src/styles/fonts/CALLIGRAPHY-SOURCES.md)。
+系统字体不随站点打包；如果访问设备未安装“方正楷体简体”，浏览器会按 CSS 字体回退顺序选择可用楷体。
